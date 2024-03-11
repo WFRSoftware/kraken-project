@@ -21,6 +21,8 @@ import { CreateFindingDefinition } from "./views/knowledge-base/create-finding-d
 import { EditFindingDefinition } from "./views/knowledge-base/edit-finding-definition";
 import { ListFindingDefinition } from "./views/knowledge-base/list-finding-definition";
 import WorkspaceNotes from "./views/workspace/workspace-notes";
+import WorkspaceFindings from "./views/workspace/workspace-findings";
+import { CreateFinding } from "./views/workspace/workspace-finding/create-finding";
 
 export const ROUTER = new Router();
 
@@ -126,6 +128,28 @@ export const ROUTES = {
             <ContentWithMenu>
                 <Workspace view={"attacks"} uuid={workspaceUuid}>
                     <WorkspaceAttacks targetType={targetType} targetUuid={targetUuid} />
+                </Workspace>
+            </ContentWithMenu>
+        ),
+    }),
+    WORKSPACE_FINDINGS: ROUTER.add({
+        url: "workspaces/{uuid}/findings",
+        parser: { uuid: String },
+        render: ({ uuid }) => (
+            <ContentWithMenu>
+                <Workspace uuid={uuid} view={"findings"}>
+                    <WorkspaceFindings />
+                </Workspace>
+            </ContentWithMenu>
+        ),
+    }),
+    WORKSPACE_FINDINGS_CREATE: ROUTER.add({
+        url: "workspaces/{uuid}/findings/create",
+        parser: { uuid: String },
+        render: ({ uuid }) => (
+            <ContentWithMenu>
+                <Workspace uuid={uuid} view={"findings"}>
+                    <CreateFinding />
                 </Workspace>
             </ContentWithMenu>
         ),

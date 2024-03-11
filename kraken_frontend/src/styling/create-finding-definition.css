@@ -46,6 +46,10 @@
     column-gap: 1.5em;
 }
 
+.create-finding-definition-header .sub-heading{
+    margin-bottom: 0.25em;
+}
+
 /*
  * Editor on the right panel
  */

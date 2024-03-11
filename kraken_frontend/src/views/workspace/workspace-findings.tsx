@@ -5,9 +5,16 @@ import TableIcon from "../../svg/table";
 import GraphIcon from "../../svg/graph";
 import SeverityIcon from "../../svg/severity";
 import ArrowDownIcon from "../../svg/arrow-down";
-import { useFilter } from "./components/filter-input";
+import FilterInput, { useFilter } from "./components/filter-input";
 import { StatelessWorkspaceTable, useTable } from "./components/workspace-table";
-import { FullDomain, FullHost, FullPort, FullService } from "../../api/generated";
+import {
+    FullDomain,
+    FullFindingDefinition,
+    FullHost,
+    FullPort,
+    FullService,
+    SimpleFindingDefinition,
+} from "../../api/generated";
 import { Api } from "../../api/api";
 import TagList from "./components/tag-list";
 import { CertaintyIcon } from "./workspace-data";
@@ -16,12 +23,26 @@ import RelationLeftIcon from "../../svg/relation-left";
 import "../../styling/tabs.css";
 import * as d3 from "d3";
 import ArrowRightIcon from "../../svg/arrow-right";
+import Input from "../../components/input";
+import PlusIcon from "../../svg/plus";
+import { handleApiError } from "../../utils/helper";
+import { ROUTES } from "../../routes";
 
 const TABS = { table: "Table", graph: "Graph" };
 const FINDING_TAB = { details: "Details", relation: "Relation" };
 const DATA_TAB = { domains: "Domains", hosts: "Hosts", ports: "Ports", services: "Services" };
 
 type WorkspaceFindingsProps = {};
+
+type Finding = {
+    name: string;
+    severity: "Ok" | "Low" | "Medium" | "High" | "Critical";
+    cve: string;
+    findingDefinition: FullFindingDefinition;
+    screenshot?: string;
+    file?: string;
+    affected?: string;
+};
 
 export default function WorkspaceFindings(props: WorkspaceFindingsProps) {
     const {
@@ -30,8 +51,10 @@ export default function WorkspaceFindings(props: WorkspaceFindingsProps) {
     const [tab, setTab] = React.useState<keyof typeof TABS>("graph");
     const [findingTab, setFindingTab] = React.useState<keyof typeof FINDING_TAB>("relation");
     const [dataTab, setDataTab] = React.useState<keyof typeof DATA_TAB>("hosts");
-    const [expanded, setExpanded] = React.useState(false);
     const [selected, setSelected] = React.useState(false);
+    const [findings, setFindings] = React.useState<Array<Finding>>([]);
+    const [defs, setDefs] = React.useState([] as Array<SimpleFindingDefinition>);
+    const [search, setSearch] = React.useState("");
 
     const globalFilter = useFilter("global");
     const domainFilter = useFilter("domain");
@@ -71,6 +94,12 @@ export default function WorkspaceFindings(props: WorkspaceFindingsProps) {
             }),
         [workspace, globalFilter.applied, serviceFilter.applied],
     );
+
+    React.useEffect(() => {
+        Api.knowledgeBase.findingDefinitions
+            .all()
+            .then(handleApiError(({ findingDefinitions }) => setDefs(findingDefinitions)));
+    }, []);
 
     // Jump to first page if filter changed
     React.useEffect(() => {
@@ -260,64 +289,52 @@ export default function WorkspaceFindings(props: WorkspaceFindingsProps) {
     })();
 
     // @ts-ignore
-    const style: CSSProperties = { "--columns": "0.05fr 0.1fr 1fr 1fr" };
+    const style: CSSProperties = { "--columns": "0.1fr 1fr 1fr" };
+
     const body = () => {
         switch (tab) {
             case "table":
-                {
-                    /*TODO use workspace-table*/
-                }
+                /*TODO use workspace-table, implement filtering */
                 return (
-                    <div className="workspace-findings-table" style={style}>
-                        <div className={"workspace-table-header"}>
-                            <span></span>
-                            <span>Severity</span>
-                            <span>Name</span>
-                            <span>CVE</span>
-                        </div>
-                        <div className="workspace-table-body">
-                            <div
-                                className="workspace-table-row"
-                                onClick={() => {
-                                    setSelected(true);
-                                }}
+                    <>
+                        <div className={"workspace-table-pre-header"}>
+                            <Input placeholder={"Search findings..."} value={search} onChange={setSearch} />
+                            <button
+                                className={"button"}
+                                title={"Create finding"}
+                                {...ROUTES.WORKSPACE_FINDINGS_CREATE.clickHandler({ uuid: workspace })}
                             >
-                                <span
-                                    className="workspace-data-certainty-icon"
-                                    onClick={(event) => {
-                                        event.stopPropagation();
-                                        if (expanded) {
-                                            setExpanded(false);
-                                        } else {
-                                            setExpanded(true);
-                                        }
+                                <PlusIcon />
+                            </button>
+                        </div>
+                        <div className="workspace-findings-table" style={style}>
+                            <div className={"workspace-table-header"}>
+                                <span>Severity</span>
+                                <span>Name</span>
+                                <span>CVE</span>
+                            </div>
+                            <div className="workspace-table-body">
+                                <div
+                                    className="workspace-table-row"
+                                    onClick={() => {
+                                        setSelected(true);
                                     }}
                                 >
-                                    {expanded ? <ArrowDownIcon inverted={true} /> : <ArrowDownIcon />}
-                                </span>
-                                <span className="workspace-data-certainty-icon">
-                                    <SeverityIcon />
-                                </span>
-                                <span>sadsada</span> <span>sadsadas</span>
-                            </div>
-                            {expanded ? (
-                                <div className="workspace-table-row" style={{ paddingLeft: "3em" }}>
-                                    <span></span>
                                     <span className="workspace-data-certainty-icon">
                                         <SeverityIcon />
                                     </span>
                                     <span>sadsada</span> <span>sadsadas</span>
                                 </div>
-                            ) : undefined}
-                            <div className="workspace-table-row">
-                                <span></span>
-                                <span className="workspace-data-certainty-icon">
-                                    <SeverityIcon />
-                                </span>
-                                <span>sadsada</span> <span>sadsadas</span>
+
+                                <div className="workspace-table-row">
+                                    <span className="workspace-data-certainty-icon">
+                                        <SeverityIcon />
+                                    </span>
+                                    <span>sadsada</span> <span>sadsadas</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </>
                 );
             case "graph":
                 return (

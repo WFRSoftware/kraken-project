@@ -6,6 +6,8 @@ import { setupMonaco } from "../knowledge-base";
 import { editor } from "monaco-editor";
 import "../../styling/workspace-notes.css";
 import useLiveEditor from "../../components/live-editor";
+import { Api } from "../../api/api";
+import { handleApiError } from "../../utils/helper";
 
 export type WorkspaceNotesProps = {};
 
@@ -38,7 +40,14 @@ export default function WorkspaceNotes(props: WorkspaceNotesProps) {
             }
         },
         setValue: setText,
+        onUserEdit: (value) => {
+            window.localStorage.setItem(`workspaces/${workspace.uuid}/notes`, value);
+        },
     });
+
+    React.useEffect(() => {
+        Api.workspaces.get(workspace.uuid).then(handleApiError(({ notes }) => setText(notes)));
+    }, [workspace.uuid]);
 
     return (
         <div className={"workspace-notes-container pane"}>
@@ -47,6 +56,7 @@ export default function WorkspaceNotes(props: WorkspaceNotesProps) {
                 className={"knowledge-base-editor"}
                 theme={"custom"}
                 beforeMount={setupMonaco}
+                value={text}
                 language={"markdown"}
                 onChange={onChange}
                 onMount={setEditorInstance}

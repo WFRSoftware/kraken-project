@@ -303,6 +303,7 @@ impl InternalEditorCached for WsNotesCache {
         let db = &GLOBAL.db;
 
         insert!(db, WorkspaceNotes)
+            .return_nothing()
             .single(&WorkspaceNotesInsert {
                 uuid: Uuid::new_v4(),
                 notes: value,
@@ -365,12 +366,30 @@ where
                 let data: Vec<(Uuid, String)> = self.get_changed();
 
                 let mut update_failed = vec![];
+                let mut update_success = vec![];
                 for (uuid, value) in data {
                     let res = self.save_to_db(uuid, value.clone()).await;
 
                     if let Err(err) = res {
                         error!("DB error when updating workspace notes: {err}");
                         update_failed.push((uuid, value))
+                    } else {
+                        update_success.push((uuid, value));
+                    }
+                }
+
+                {
+                    let mut guard = self.write_cache();
+                    for (uuid, value) in update_success {
+                        guard.get_mut(&uuid).and_then(|opt| {
+                            opt.as_mut().map(|inner| {
+                                // If the data was changed in the meantime, we shouldn't set
+                                // changed to false
+                                if inner.data == value {
+                                    inner.changed = false
+                                }
+                            })
+                        });
                     }
                 }
 
@@ -417,7 +436,7 @@ where
 
             // Check if ws notes have already been queried once
             return if let Some(item) = cache_item {
-                Ok(item.map(|x| x.data))
+                Ok(Some(item.map(|x| x.data).unwrap_or_default()))
             } else {
                 // Query the db to populate the cache
                 let notes = self.query_db(key).await?;

@@ -1,0 +1,101 @@
+.workspace-findings-layout{
+    display: grid;
+    grid-template-rows: 2.5em 100%;
+}
+
+.workspace-findings-body{
+    height: calc(100% - 6.5em);
+}
+
+.workspace-findings-table{
+    padding: 2em 1em;
+}
+
+.workspace-findings-selection-container{
+    grid-area: 2 / 1 / span 1 / span 1;
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    grid-template-rows: 100%;
+    gap: 1em;
+}
+
+.workspace-findings-selection-info >.icon{
+    width: 2em;
+    cursor: pointer;
+}
+
+.workspace-findings-selection-info  .icon:hover{
+    filter: brightness(0) invert() drop-shadow(0 0 8px var(--primary));
+}
+
+.workspace-finding-selection-arrow{
+    cursor: pointer;
+}
+
+.workspace-finding-selection-arrow:hover{
+    filter: brightness(0) invert() drop-shadow(0 0 8px var(--primary));
+}
+
+.workspace-finding-selection-arrow:active{
+    transform: translate(-0.2em, 0);
+}
+
+.tree-node text{
+    color: var(--text);
+}
+
+.tree-link{
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 2px;
+}
+
+.tree-link-animation{
+    stroke-dasharray: 2%;
+    animation: inverted-dash linear 20s infinite;
+}
+
+.tree-wordwrap{
+    white-space: pre-wrap; /* CSS3 */
+    white-space: -moz-pre-wrap; /* Firefox */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* IE */
+}
+
+.tree-node{
+    width: calc(100% - 4px);
+    height: calc(100% - 4px);
+    border: 2px solid var(--primary-op);
+    background-color: #00ccff20;
+    border-radius: 0.5em;
+    cursor: pointer;
+}
+
+.tree-node-heading{
+    background-color: var(--primary-op);
+    padding: 0.5em;
+    text-align: center;
+    border-top-left-radius: 0.5em;
+    border-top-right-radius: 0.5em;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.tree-node-content{
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+}
+
+.tree-node-type{
+    font-size: 0.7em;
+    text-align: center;
+}
+
+.tree-node-body{
+    padding: 0.5em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}

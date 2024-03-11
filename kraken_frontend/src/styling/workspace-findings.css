@@ -105,7 +105,7 @@
 .create-finding-container{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 3em;
+    gap: 4em;
     height: 100%;
 }
 
@@ -114,7 +114,7 @@
     display: flex;
     flex-direction: column;
     gap: 2em;
-    height: 90%;
+    height: 98%;
     overflow-y: auto;
 }
 
@@ -135,3 +135,81 @@
     column-gap: 1.5em;
 }
 
+.create-finding-editor{
+    display: flex;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.create-finding-editor .create-finding-pane{
+    width: 100%;
+
+}
+
+.create-finding-editor-container {
+    display: grid;
+    grid-template-columns: 0.055fr 1fr;
+}
+
+.create-finding-pane{
+    display: flex;
+    flex-direction: column;
+    border-radius: 0.5em;
+    padding: 2em;
+    border: 1px solid var(--primary-op);
+    background-color: #00ccff10;
+    gap: 0.5em;
+}
+
+.create-finding-pane .sub-heading {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.create-finding-screenshot{
+    display: flex;
+    opacity: 0.75;
+    height: 10em;
+    width: 10em;
+    overflow: hidden;
+
+    /* default image */
+    background: url('https://qph.cf2.quoracdn.net/main-qimg-f32f85d21d59a5540948c3bfbce52e68');
+
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    box-shadow: 0 8px 6px -6px black;
+}
+
+.create-finding-upload{
+    /* make it invisible */
+    opacity: 0;
+    /* make it take the full height and width of the parent container */
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+}
+
+.upload-icon{
+    transform: translate(-50%, -50%);
+    /* initial icon state */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: #ccc;
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: #bbb;
+}
+
+/* toggle icon state */
+.create-finding-screenshot:hover .upload-icon {
+    opacity: 1;
+}
+
+.preview-img{
+    width: 10em;
+    height: 10em;
+    background-color: red;
+}

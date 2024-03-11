@@ -22,7 +22,7 @@ import { EditFindingDefinition } from "./views/knowledge-base/edit-finding-defin
 import { ListFindingDefinition } from "./views/knowledge-base/list-finding-definition";
 import WorkspaceNotes from "./views/workspace/workspace-notes";
 import WorkspaceFindings from "./views/workspace/workspace-findings";
-import { CreateFinding } from "./views/workspace/workspace-finding/create-finding";
+import { WorkspaceCreateFinding } from "./views/workspace/workspace-finding/workspace-create-finding";
 
 export const ROUTER = new Router();
 
@@ -149,7 +149,7 @@ export const ROUTES = {
         render: ({ uuid }) => (
             <ContentWithMenu>
                 <Workspace uuid={uuid} view={"findings"}>
-                    <CreateFinding />
+                    <WorkspaceCreateFinding />
                 </Workspace>
             </ContentWithMenu>
         ),

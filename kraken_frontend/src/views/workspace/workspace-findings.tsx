@@ -48,7 +48,7 @@ export default function WorkspaceFindings(props: WorkspaceFindingsProps) {
     const {
         workspace: { uuid: workspace },
     } = React.useContext(WORKSPACE_CONTEXT);
-    const [tab, setTab] = React.useState<keyof typeof TABS>("graph");
+    const [tab, setTab] = React.useState<keyof typeof TABS>("table");
     const [findingTab, setFindingTab] = React.useState<keyof typeof FINDING_TAB>("relation");
     const [dataTab, setDataTab] = React.useState<keyof typeof DATA_TAB>("hosts");
     const [selected, setSelected] = React.useState(false);

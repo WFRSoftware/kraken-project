@@ -56,11 +56,11 @@ export default function WorkspaceFindings(props: WorkspaceFindingsProps) {
     const [defs, setDefs] = React.useState([] as Array<SimpleFindingDefinition>);
     const [search, setSearch] = React.useState("");
 
-    const globalFilter = useFilter("global");
-    const domainFilter = useFilter("domain");
-    const hostFilter = useFilter("host");
-    const portFilter = useFilter("port");
-    const serviceFilter = useFilter("service");
+    const globalFilter = useFilter(workspace, "global");
+    const domainFilter = useFilter(workspace, "domain");
+    const hostFilter = useFilter(workspace, "host");
+    const portFilter = useFilter(workspace, "port");
+    const serviceFilter = useFilter(workspace, "service");
 
     const { items: domains, ...domainsTable } = useTable<FullDomain>(
         (limit, offset) =>

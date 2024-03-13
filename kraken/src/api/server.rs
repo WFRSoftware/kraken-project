@@ -36,7 +36,9 @@ use crate::api::handler::auth;
 use crate::api::handler::data_export;
 use crate::api::handler::domains;
 use crate::api::handler::files;
+use crate::api::handler::finding_affected;
 use crate::api::handler::finding_definitions;
+use crate::api::handler::findings;
 use crate::api::handler::global_tags;
 use crate::api::handler::hosts;
 use crate::api::handler::leeches;
@@ -230,6 +232,7 @@ pub async fn start_server(config: &Config) -> Result<(), StartServerError> {
                     .service(hosts::handler::delete_host)
                     .service(hosts::handler::get_host_sources)
                     .service(hosts::handler::get_host_relations)
+                    .service(hosts::handler::get_host_findings)
                     .service(ports::handler::get_all_ports)
                     .service(ports::handler::get_port)
                     .service(ports::handler::create_port)
@@ -237,6 +240,7 @@ pub async fn start_server(config: &Config) -> Result<(), StartServerError> {
                     .service(ports::handler::delete_port)
                     .service(ports::handler::get_port_sources)
                     .service(ports::handler::get_port_relations)
+                    .service(ports::handler::get_port_findings)
                     .service(services::handler::get_all_services)
                     .service(services::handler::get_service)
                     .service(services::handler::create_service)
@@ -244,6 +248,7 @@ pub async fn start_server(config: &Config) -> Result<(), StartServerError> {
                     .service(services::handler::delete_service)
                     .service(services::handler::get_service_sources)
                     .service(services::handler::get_service_relations)
+                    .service(services::handler::get_service_findings)
                     .service(domains::handler::get_all_domains)
                     .service(domains::handler::get_domain)
                     .service(domains::handler::create_domain)
@@ -251,10 +256,20 @@ pub async fn start_server(config: &Config) -> Result<(), StartServerError> {
                     .service(domains::handler::delete_domain)
                     .service(domains::handler::get_domain_sources)
                     .service(domains::handler::get_domain_relations)
+                    .service(domains::handler::get_domain_findings)
                     .service(wordlists::handler::get_all_wordlists)
                     .service(workspace_invitations::handler::get_all_invitations)
                     .service(workspace_invitations::handler::accept_invitation)
                     .service(workspace_invitations::handler::decline_invitation)
+                    .service(findings::handler::create_finding)
+                    .service(findings::handler::get_all_findings)
+                    .service(findings::handler::get_finding)
+                    .service(findings::handler::update_finding)
+                    .service(findings::handler::delete_finding)
+                    .service(finding_affected::handler::create_finding_affected)
+                    .service(finding_affected::handler::get_finding_affected)
+                    .service(finding_affected::handler::update_finding_affected)
+                    .service(finding_affected::handler::delete_finding_affected)
                     .service(finding_definitions::handler::create_finding_definition)
                     .service(finding_definitions::handler::get_finding_definition)
                     .service(finding_definitions::handler::get_all_finding_definitions),

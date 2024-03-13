@@ -19,7 +19,9 @@ use crate::api::handler::common;
 use crate::api::handler::data_export;
 use crate::api::handler::domains;
 use crate::api::handler::files;
+use crate::api::handler::finding_affected;
 use crate::api::handler::finding_definitions;
+use crate::api::handler::findings;
 use crate::api::handler::global_tags;
 use crate::api::handler::hosts;
 use crate::api::handler::leeches;
@@ -162,6 +164,7 @@ impl Modify for SecurityAddon2 {
         hosts::handler::delete_host,
         hosts::handler::get_host_sources,
         hosts::handler::get_host_relations,
+        hosts::handler::get_host_findings,
         ports::handler::get_all_ports,
         ports::handler::get_port,
         ports::handler::create_port,
@@ -169,6 +172,7 @@ impl Modify for SecurityAddon2 {
         ports::handler::delete_port,
         ports::handler::get_port_sources,
         ports::handler::get_port_relations,
+        ports::handler::get_port_findings,
         services::handler::get_all_services,
         services::handler::get_service,
         services::handler::create_service,
@@ -176,6 +180,7 @@ impl Modify for SecurityAddon2 {
         services::handler::delete_service,
         services::handler::get_service_sources,
         services::handler::get_service_relations,
+        services::handler::get_service_findings,
         domains::handler::get_all_domains,
         domains::handler::get_domain,
         domains::handler::create_domain,
@@ -183,6 +188,7 @@ impl Modify for SecurityAddon2 {
         domains::handler::delete_domain,
         domains::handler::get_domain_sources,
         domains::handler::get_domain_relations,
+        domains::handler::get_domain_findings,
         wordlists::handler::get_all_wordlists,
         wordlists::handler_admin::create_wordlist_admin,
         wordlists::handler_admin::get_all_wordlists_admin,
@@ -191,6 +197,15 @@ impl Modify for SecurityAddon2 {
         workspace_invitations::handler::get_all_invitations,
         workspace_invitations::handler::accept_invitation,
         workspace_invitations::handler::decline_invitation,
+        findings::handler::create_finding,
+        findings::handler::get_all_findings,
+        findings::handler::get_finding,
+        findings::handler::update_finding,
+        findings::handler::delete_finding,
+        finding_affected::handler::create_finding_affected,
+        finding_affected::handler::get_finding_affected,
+        finding_affected::handler::update_finding_affected,
+        finding_affected::handler::delete_finding_affected,
         finding_definitions::handler::create_finding_definition,
         finding_definitions::handler::get_finding_definition,
         finding_definitions::handler::get_all_finding_definitions,
@@ -345,6 +360,16 @@ impl Modify for SecurityAddon2 {
         chan::ws_manager::schema::FindingSection,
         chan::ws_manager::schema::EditorTarget,
         chan::ws_manager::schema::CursorPosition,
+        findings::schema::CreateFindingRequest,
+        findings::schema::UpdateFindingRequest,
+        findings::schema::SimpleFinding,
+        findings::schema::FullFinding,
+        findings::schema::SimpleFindingAffected,
+        findings::schema::ListFindings,
+        finding_affected::schema::CreateFindingAffectedRequest,
+        finding_affected::schema::UpdateFindingAffectedRequest,
+        finding_affected::schema::FullFindingAffected,
+        finding_affected::schema::FindingAffectedObject,
         finding_definitions::schema::CreateFindingDefinitionRequest,
         finding_definitions::schema::FullFindingDefinition,
         finding_definitions::schema::SimpleFindingDefinition,

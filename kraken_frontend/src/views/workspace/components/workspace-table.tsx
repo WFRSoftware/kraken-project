@@ -195,7 +195,7 @@ export function StatelessWorkspaceTable(props: StatelessWorkspaceTableProps) {
 /** Hook which provides the data required for {@link StatelessWorkspaceTable} */
 export function useTable<T extends { uuid: string }>(
     query: (limit: number, offset: number) => Promise<Result<GenericPage<T>, ApiError>>,
-    queryDeps?: React.DependencyList
+    queryDeps?: React.DependencyList,
 ) {
     const [limit, setLimit] = React.useState(100);
     const [offset, setOffset] = React.useState(0);
@@ -210,7 +210,7 @@ export function useTable<T extends { uuid: string }>(
             handleApiError(({ items, total }) => {
                 setItems(items);
                 setTotal(total);
-            })
+            }),
         );
     }, [limit, offset, reload, ...(queryDeps || [])]);
 

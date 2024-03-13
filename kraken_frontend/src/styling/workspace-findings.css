@@ -1,13 +1,13 @@
-.workspace-findings-layout{
+.workspace-findings-layout {
     display: grid;
     grid-template-rows: 2.5em 100%;
 }
 
-.workspace-findings-body{
+.workspace-findings-body {
     height: calc(100% - 6.5em);
 }
 
-.workspace-findings-selection-container{
+.workspace-findings-selection-container {
     grid-area: 2 / 1 / span 1 / span 1;
     display: grid;
     grid-template-columns: 2fr 3fr;
@@ -15,56 +15,55 @@
     gap: 1em;
 }
 
-.workspace-findings-selection-info{
+.workspace-findings-selection-info {
     display: flex;
     gap: 1em;
 }
 
-
-.workspace-findings-selection-info >.icon{
+.workspace-findings-selection-info > .icon {
     width: 2em;
     cursor: pointer;
 }
 
-.workspace-findings-selection-info  .icon:hover{
+.workspace-findings-selection-info .icon:hover {
     filter: brightness(0) invert() drop-shadow(0 0 8px var(--primary));
 }
 
-.workspace-finding-selection-arrow{
+.workspace-finding-selection-arrow {
     cursor: pointer;
 }
 
-.workspace-finding-selection-arrow:hover{
+.workspace-finding-selection-arrow:hover {
     filter: brightness(0) invert() drop-shadow(0 0 8px var(--primary));
 }
 
-.workspace-finding-selection-arrow:active{
+.workspace-finding-selection-arrow:active {
     transform: translate(-0.2em, 0);
 }
 
-.tree-node text{
+.tree-node text {
     color: var(--text);
 }
 
-.tree-link{
+.tree-link {
     fill: none;
     stroke: #ccc;
     stroke-width: 2px;
 }
 
-.tree-link-animation{
+.tree-link-animation {
     stroke-dasharray: 2%;
     animation: inverted-dash linear 20s infinite;
 }
 
-.tree-wordwrap{
+.tree-wordwrap {
     white-space: pre-wrap; /* CSS3 */
     white-space: -moz-pre-wrap; /* Firefox */
     white-space: -o-pre-wrap; /* Opera 7 */
     word-wrap: break-word; /* IE */
 }
 
-.tree-node{
+.tree-node {
     width: calc(100% - 4px);
     height: calc(100% - 4px);
     border: 2px solid var(--primary-op);
@@ -73,7 +72,7 @@
     cursor: pointer;
 }
 
-.tree-node-heading{
+.tree-node-heading {
     background-color: var(--primary-op);
     padding: 0.5em;
     text-align: center;
@@ -84,32 +83,38 @@
     text-overflow: ellipsis;
 }
 
-.tree-node-content{
+.tree-node-content {
     display: flex;
     flex-direction: column;
     gap: 0.25em;
 }
 
-.tree-node-type{
+.tree-node-type {
     font-size: 0.7em;
     text-align: center;
 }
 
-.tree-node-body{
+.tree-node-body {
     padding: 0.5em;
     display: flex;
     flex-direction: column;
     gap: 0.5em;
 }
 
-.create-finding-container{
+.create-finding-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1.5em;
+}
+
+.create-finding-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 4em;
     height: calc(100% - 4em);
 }
 
-.create-finding-form{
+.create-finding-form {
     padding: 0.5em;
     display: flex;
     flex-direction: column;
@@ -129,22 +134,21 @@
     margin-right: 0.2em;
 }
 
-.create-finding-files{
+.create-finding-files {
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 1.5em;
 }
 
-.create-finding-editor{
+.create-finding-editor {
     display: flex;
     position: relative;
     width: 100%;
     height: 100%;
 }
 
-.create-finding-editor .create-finding-pane{
+.create-finding-editor .create-finding-pane {
     width: 100%;
-
 }
 
 .create-finding-editor-container {
@@ -152,7 +156,7 @@
     grid-template-columns: 0.055fr 1fr;
 }
 
-.create-finding-pane{
+.create-finding-pane {
     display: flex;
     flex-direction: column;
     border-radius: 0.5em;
@@ -168,15 +172,15 @@
     justify-content: space-between;
 }
 
-.create-finding-screenshot-container{
+.create-finding-screenshot-container {
     height: 8em;
     width: 16em;
     position: relative;
 }
 
-.create-finding-screenshot{
+.create-finding-screenshot {
     border-radius: 0.5em;
-    border: 2px dashed var(--primary-op) ;
+    border: 2px dashed var(--primary-op);
     background-color: #00ccff10;
     height: 8em;
     width: 16em;
@@ -187,16 +191,16 @@
     overflow: hidden;
 }
 
-.create-finding-screenshot button{
+.create-finding-screenshot button {
     overflow: visible;
 }
 
-.create-finding-screenshot span{
+.create-finding-screenshot span {
     padding: 2em;
     text-align: center;
 }
 
-.create-finding-upload{
+.create-finding-upload {
     opacity: 0;
     position: absolute;
     top: 0;
@@ -206,51 +210,52 @@
     cursor: pointer;
 }
 
-.create-finding-screenshot img{
+.create-finding-screenshot img {
     width: 100%;
     height: 100%;
     opacity: 85%;
 }
 
-.create-finding-screenshot img:hover{
+.create-finding-screenshot img:hover {
     cursor: pointer;
 }
 
-.popup-overlay{
+.popup-overlay {
     backdrop-filter: blur(2px);
     transition: all 0.15s ease-out;
 }
 
-.create-finding-screenshot-popup{
+.create-finding-screenshot-popup {
     display: flex;
     height: 80vh;
     width: 80vw;
 }
 
-.create-finding-screenshot-popup img{
+.create-finding-screenshot-popup img {
     width: 100%;
     height: 100%;
     object-fit: contain;
 }
 
-.create-finding-close-screenshot{
+.create-finding-close-screenshot {
     z-index: 10;
     position: absolute;
     right: -5%;
     top: -5%;
     border: 1px solid var(--primary-op);
     border-radius: 1em;
-    width: 2em;
-    height: 2em;
+    width: 1.5em;
+    height: 1.5em;
+    padding: 0;
     display: flex;
     transform: rotate(45deg);
 }
 
-.create-finding-log-file{
+.create-finding-log-file {
     position: relative;
 }
 
-.create-finding-log-file input{
+.create-finding-log-file input {
     position: absolute;
     z-index: -1;
     opacity: 0;
@@ -262,30 +267,50 @@
     height: 1em;
 }
 
-.create-finding-file-upload{
-  width: 10em;
+.create-finding-file-upload {
+    width: 10em;
 }
 
-.create-finding-file-container{
+.create-finding-file-container {
     display: flex;
     gap: 0.5em;
     flex-direction: column;
 }
 
-.create-finding-file-name{
+.create-finding-file-name {
     padding-left: 0.5em;
-    width: 10em;
+    width: 20em;
     overflow-wrap: break-word;
+    color: var(--text);
 }
 
-.create-finding-section-toggle :hover{
+.create-finding-file-grid {
+    width: 23em;
+    display: grid;
+    grid-template-columns: 0.1fr 1fr;
+    gap: 0.5em;
+    align-items: center;
+}
+.create-finding-file-grid .button {
+    border: 1px solid var(--primary-op);
+    padding: 0;
+    border-radius: 1em;
+    width: 1.5em;
+    height: 1.5em;
+    display: flex;
+    transform: rotate(45deg);
+}
+
+.create-finding-file-name:hover {
+    opacity: 80%;
+    color: var(--primary);
+    transition: color 0.3s ease-out;
+}
+
+.create-finding-section-toggle :hover {
     cursor: pointer;
 }
 
-.create-finding-section-toggle .icon:hover{
-     filter: brightness(0) invert() drop-shadow(0 0 8px var(--primary));
+.create-finding-section-toggle .icon:hover {
+    filter: brightness(0) invert() drop-shadow(0 0 8px var(--primary));
 }
-
-
-
-

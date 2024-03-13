@@ -29,7 +29,7 @@
     margin: 0.6em 1em;
 }
 
-.selected-tab{
+.selected-tab {
     background-color: #00ccff30;
     height: 3em;
     transition: all 0.15s ease-out;
@@ -63,7 +63,7 @@
     background-color: #033745;
 }
 
-.selected-icon-tab{
+.selected-icon-tab {
     background-color: #00ccff30;
     height: 1.5em;
     transition: all 0.15s ease-out;

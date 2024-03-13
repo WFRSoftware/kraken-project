@@ -1,6 +1,5 @@
 import React, { ChangeEvent, DragEvent } from "react";
 import { WORKSPACE_CONTEXT } from "../workspace";
-import Input from "../../../components/input";
 import { SelectPrimitive, selectStyles } from "../../../components/select-menu";
 import { useSectionsState } from "../../knowledge-base/finding-definition/sections";
 import BookIcon from "../../../svg/book";
@@ -12,13 +11,11 @@ import { components } from "react-select";
 import RelationLeftRightIcon from "../../../svg/relation-left-right";
 import FileIcon from "../../../svg/file";
 import ScreenshotIcon from "../../../svg/screenshot";
-import { Details } from "../../knowledge-base/list-finding-definition";
 import { GithubMarkdown } from "../../../components/github-markdown";
 import { setupMonaco } from "../../knowledge-base";
 import Editor from "@monaco-editor/react";
 import InformationIcon from "../../../svg/information";
-import ArrowLeftIcon from "../../../svg/arrow-left";
-import { ROUTES } from "../../../routes";
+
 import Popup from "reactjs-popup";
 import PlusIcon from "../../../svg/plus";
 import ArrowDownIcon from "../../../svg/arrow-down";
@@ -31,19 +28,20 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
     const {
         workspace: { uuid: workspace },
     } = React.useContext(WORKSPACE_CONTEXT);
-    const [name, setName] = React.useState("");
     const [severity, setSeverity] = React.useState("Medium");
     const [section, setSection] = React.useState<keyof typeof SECTION>("definition");
-    const [cve, setCve] = React.useState("");
     const [findingDef, setFindingDef] = React.useState(""); // selected definition
     const [defs, setDefs] = React.useState([] as Array<SimpleFindingDefinition>); // all definitions
     const [hover, setHover] = React.useState<SimpleFindingDefinition | undefined>(); // hovered definition
-    const [screenshot, setScreenshot] = React.useState<File>();
     const [file, setFile] = React.useState<File>();
     const [screenshotDataURL, setScreenshotDataURL] = React.useState<string | undefined>("");
+    const [fileDataURL, setFileDataURL] = React.useState<string | undefined>("");
     const [popup, setPopup] = React.useState<boolean>(false);
     const [description, setDescription] = React.useState<boolean>(true);
     const [affected, setAffected] = React.useState<boolean>(true);
+    const [drag, setDrag] = React.useState<boolean>(false);
+
+    const inputRef = React.useRef<HTMLInputElement>(null);
 
     const sections = useSectionsState();
 
@@ -75,9 +73,11 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
         //TODO typecheck?
 
         setFile(f);
+        setFileDataURL(URL.createObjectURL(f));
     };
-    const imageHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        const fileUploadInput = e.target;
+
+    const updateImage = () => {
+        const fileUploadInput = inputRef.current;
 
         if (!fileUploadInput) {
             return; //File input element not found
@@ -91,7 +91,7 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
         }
 
         if (!image.type.includes("image")) {
-            return; //file is no image
+            return; //file is no image, only .png, .jpg, .jpeg
         }
 
         //TODO maybe check file size
@@ -100,8 +100,6 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
          *     return; //('Maximum upload size is 10MB!')
          *   }
          * */
-
-        setScreenshot(image);
 
         const fileReader = new FileReader();
         fileReader.readAsDataURL(image);
@@ -112,6 +110,19 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
                 setScreenshotDataURL(result);
             }
         };
+        setDrag(false);
+    };
+    const dropHandler = (e: DragEvent<HTMLInputElement>) => {
+        console.log(e);
+        e.preventDefault();
+        if (inputRef.current) {
+            inputRef.current.files = e.dataTransfer.files;
+            updateImage();
+        }
+    };
+
+    const imageHandler = (e: ChangeEvent<HTMLInputElement>) => {
+        updateImage();
     };
 
     const editor = () => {
@@ -155,22 +166,17 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
                 </div>
                 <div className="create-finding-container">
                     <div className="create-finding-form">
-                        <div className={"create-finding-definition-header"}>
-                            <h2 className={"sub-heading"}>Name</h2>
+                        <div className="create-finding-header">
                             <h2 className={"sub-heading"}>Severity</h2>
-                            <h2 className={"sub-heading"}>CVE</h2>
-                            <Input maxLength={255} value={name} onChange={setName} />
+                            <h2 className={"sub-heading"}>
+                                <InformationIcon /> Finding Definition
+                            </h2>
+
                             <SelectPrimitive
                                 value={severity}
                                 options={["Okay", "Low", "Medium", "High", "Critical"]}
                                 onChange={(value) => setSeverity(value || severity)}
                             />
-                            <Input maxLength={255} value={cve} onChange={setCve} />
-                        </div>
-                        <div>
-                            <h2 className={"sub-heading"}>
-                                <InformationIcon /> Finding Definition
-                            </h2>
                             <Select<{ label: string; value: string }>
                                 className={"dropdown"}
                                 components={{
@@ -212,6 +218,7 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
                                 styles={selectStyles("default")}
                             />
                         </div>
+
                         <div>
                             <h2 className={"sub-heading"}>
                                 <BookIcon />
@@ -249,16 +256,36 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
                             <div className="create-finding-screenshot-container">
                                 {screenshotDataURL ? (
                                     <button
+                                        title={"Remove screenshot"}
                                         className="button create-finding-close-screenshot"
                                         onClick={() => {
                                             setScreenshotDataURL("");
-                                            setScreenshot(undefined);
                                         }}
                                     >
                                         <PlusIcon />
                                     </button>
                                 ) : undefined}
-                                <div className="create-finding-screenshot">
+                                <div
+                                    className="create-finding-screenshot"
+                                    onDrop={dropHandler}
+                                    onDragOver={(e) => {
+                                        if (!drag) {
+                                            setDrag(true);
+                                        }
+                                        e.preventDefault();
+                                    }}
+                                    onDragEnter={(e) => {
+                                        e.preventDefault();
+                                    }}
+                                    onDragLeave={() => setDrag(false)}
+                                >
+                                    <input
+                                        ref={inputRef}
+                                        className="create-finding-upload"
+                                        type="file"
+                                        onChange={imageHandler}
+                                        accept={".png, .jpeg, .jpg"}
+                                    />
                                     {screenshotDataURL ? (
                                         <>
                                             <div
@@ -271,13 +298,11 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
                                         </>
                                     ) : (
                                         <>
-                                            <span>Drag your image here or click in this area</span>
-                                            <input
-                                                className="create-finding-upload"
-                                                type="file"
-                                                onChange={imageHandler}
-                                                accept={"image/*"}
-                                            />
+                                            {drag ? (
+                                                <span>Drop image here</span>
+                                            ) : (
+                                                <span>Drag your image here or click in this area</span>
+                                            )}
                                         </>
                                     )}
                                 </div>
@@ -289,7 +314,23 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
                                     </label>
                                     <input id="upload" type="file" onChange={fileHandler} />
                                 </div>
-                                {file ? <span className="create-finding-file-name">{file.name}</span> : undefined}
+                                {file ? (
+                                    <div className="create-finding-file-grid">
+                                        <button
+                                            title="remove file"
+                                            className="button"
+                                            onClick={() => {
+                                                setFileDataURL("");
+                                                setFile(undefined);
+                                            }}
+                                        >
+                                            <PlusIcon />
+                                        </button>
+                                        <a className="create-finding-file-name" download={file.name} href={fileDataURL}>
+                                            <span>{file.name}</span>
+                                        </a>
+                                    </div>
+                                ) : undefined}
                             </div>
                         </div>
                         {/*TODO Create finding on button click*/}

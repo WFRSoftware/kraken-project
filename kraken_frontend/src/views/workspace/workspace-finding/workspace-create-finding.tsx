@@ -3,7 +3,7 @@ import { WORKSPACE_CONTEXT } from "../workspace";
 import { SelectPrimitive, selectStyles } from "../../../components/select-menu";
 import { useSectionsState } from "../../knowledge-base/finding-definition/sections";
 import BookIcon from "../../../svg/book";
-import { CreateFindingAffectedRequest, SimpleFindingDefinition } from "../../../api/generated";
+import { CreateFindingAffectedRequest, FindingSeverity, SimpleFindingDefinition } from "../../../api/generated";
 import { Api } from "../../../api/api";
 import { handleApiError } from "../../../utils/helper";
 import Select from "react-select";
@@ -20,6 +20,8 @@ import Popup from "reactjs-popup";
 import PlusIcon from "../../../svg/plus";
 import ArrowDownIcon from "../../../svg/arrow-down";
 import WorkspaceFindingTable from "./workspace-finding-table";
+import { toast } from "react-toastify";
+import { ROUTES } from "../../../routes";
 
 export type CreateFindingProps = {};
 
@@ -29,9 +31,9 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
     const {
         workspace: { uuid: workspace },
     } = React.useContext(WORKSPACE_CONTEXT);
-    const [severity, setSeverity] = React.useState("Medium");
+    const [severity, setSeverity] = React.useState<FindingSeverity>("Medium");
     const [section, setSection] = React.useState<keyof typeof SECTION>("definition");
-    const [findingDef, setFindingDef] = React.useState(""); // selected definition
+    const [findingDef, setFindingDef] = React.useState<string | undefined>(undefined); // selected definition
     const [defs, setDefs] = React.useState([] as Array<SimpleFindingDefinition>); // all definitions
     const [hover, setHover] = React.useState<SimpleFindingDefinition | undefined>(); // hovered definition
     const [file, setFile] = React.useState<File>();
@@ -51,9 +53,6 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
         Api.knowledgeBase.findingDefinitions.all().then(
             handleApiError(({ findingDefinitions }) => {
                 setDefs(findingDefinitions);
-                if (defs.length > 0) {
-                    setFindingDef(defs[0].uuid);
-                }
             }),
         );
     }, []);
@@ -167,11 +166,38 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
         <>
             <div className="pane">
                 <div className="workspace-findings-selection-info">
-                    {/*   <ArrowLeftIcon title={"Back"} {...ROUTES.WORKSPACE_FINDINGS.clickHandler({ uuid: workspace })} />*/}
                     <h1 className="heading">Create new finding</h1>
                 </div>
                 <div className="create-finding-container">
-                    <div className="create-finding-form">
+                    <form
+                        className="create-finding-form"
+                        onSubmit={(e) => {
+                            e.preventDefault();
+                            if (findingDef === undefined) {
+                                return toast.error("Please select finding definition");
+                            }
+                            Api.workspaces.findings
+                                .create(workspace, {
+                                    severity: severity,
+                                    definition: findingDef,
+                                    details: sections.Description.value,
+                                    logFile: fileDataURL,
+                                    screenshot: screenshotDataURL,
+                                })
+                                .then(
+                                    handleApiError(async ({ uuid }) => {
+                                        await Promise.all(
+                                            affected.map((a) =>
+                                                Api.workspaces.findings
+                                                    .addAffected(workspace, uuid, a)
+                                                    .then(handleApiError()),
+                                            ),
+                                        );
+                                        ROUTES.WORKSPACE_FINDINGS_EDIT.visit({ wUuid: workspace, fUuid: uuid });
+                                    }),
+                                );
+                        }}
+                    >
                         <div className="create-finding-header">
                             <h2 className={"sub-heading"}>Severity</h2>
                             <h2 className={"sub-heading"}>
@@ -180,10 +206,17 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
 
                             <SelectPrimitive
                                 value={severity}
-                                options={["Okay", "Low", "Medium", "High", "Critical"]}
+                                options={[
+                                    FindingSeverity.Okay,
+                                    FindingSeverity.Low,
+                                    FindingSeverity.Medium,
+                                    FindingSeverity.High,
+                                    FindingSeverity.Critical,
+                                ]}
                                 onChange={(value) => setSeverity(value || severity)}
                             />
                             <Select<{ label: string; value: string }>
+                                required={true}
                                 className={"dropdown"}
                                 components={{
                                     Option: (props) => (
@@ -209,10 +242,14 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
                                         value: def.uuid,
                                     })) ?? []
                                 }
-                                value={{
-                                    label: defs.find((finding) => finding.uuid === findingDef)?.name || "",
-                                    value: findingDef,
-                                }}
+                                value={
+                                    findingDef === undefined
+                                        ? undefined
+                                        : {
+                                              label: defs.find((finding) => finding.uuid === findingDef)?.name || "",
+                                              value: findingDef,
+                                          }
+                                }
                                 onChange={(value) => {
                                     if (value !== undefined && value !== null) {
                                         setFindingDef(value.value);
@@ -342,8 +379,10 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
                             </div>
                         </div>
                         {/*TODO Create finding on button click*/}
-                        <button className="button">Create</button>
-                    </div>
+                        <button type={"submit"} className="button">
+                            Create
+                        </button>
+                    </form>
                     <div className="create-finding-editor-container">
                         <div className="knowledge-base-editor-tabs">
                             <button

@@ -298,17 +298,12 @@
     position: relative;
 }
 
-.create-finding-screenshot-container > div {
+.create-finding-screenshot-container > .content {
     border-radius: 0.5em;
     border: 2px dashed var(--primary-op);
     background-color: #00ccff10;
     height: 8em;
     width: 16em;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
 }
 
 

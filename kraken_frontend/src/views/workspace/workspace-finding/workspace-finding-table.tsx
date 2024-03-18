@@ -1,21 +1,33 @@
 import React from "react";
-import { WORKSPACE_CONTEXT } from "../workspace";
-import { useFilter } from "../components/filter-input";
-import { StatelessWorkspaceTable, useTable } from "../components/workspace-table";
-import { FullDomain, FullHost, FullPort, FullService } from "../../../api/generated";
 import { Api } from "../../../api/api";
-import RelationLeftIcon from "../../../svg/relation-left";
-import TagList from "../components/tag-list";
-import { CertaintyIcon } from "../workspace-data";
-import Domain from "../components/domain";
-import IpAddr from "../components/host";
+import { FullDomain, FullHost, FullPort, FullService } from "../../../api/generated";
+import Indicator from "../../../components/indicator";
 import OsIcon from "../../../components/os-icon";
+import RelationLeftIcon from "../../../svg/relation-left";
+import Domain from "../components/domain";
+import { useFilter } from "../components/filter-input";
+import IpAddr from "../components/host";
 import PortNumber from "../components/port";
 import ServiceName from "../components/service";
-import Indicator from "../../../components/indicator";
+import TagList from "../components/tag-list";
+import { StatelessWorkspaceTable, useTable } from "../components/workspace-table";
+import { WORKSPACE_CONTEXT } from "../workspace";
+import { CertaintyIcon } from "../workspace-data";
+
+export type WorkspaceFindingTableProps = {
+    onAddDomain?: (domain: FullDomain) => void;
+    onAddHost?: (host: FullHost) => void;
+    onAddService?: (service: FullService) => void;
+    onAddPort?: (port: FullPort) => void;
+};
 
 const DATA_TAB = { domains: "Domains", hosts: "Hosts", ports: "Ports", services: "Services" };
-export default function WorkspaceFindingTable() {
+export default function WorkspaceFindingTable({
+    onAddDomain,
+    onAddHost,
+    onAddService,
+    onAddPort,
+}: WorkspaceFindingTableProps) {
     const {
         workspace: { uuid: workspace },
     } = React.useContext(WORKSPACE_CONTEXT);
@@ -86,7 +98,10 @@ export default function WorkspaceFindingTable() {
                         {/*TODO filter items that are not in findings already*/}
                         {domains.map((domain) => (
                             <div className="workspace-table-row">
-                                <span className="workspace-data-certainty-icon workspace-finding-selection-arrow">
+                                <span
+                                    className="workspace-data-certainty-icon workspace-finding-selection-arrow"
+                                    onClick={() => onAddDomain?.(domain)}
+                                >
                                     <RelationLeftIcon />
                                 </span>
 
@@ -124,7 +139,10 @@ export default function WorkspaceFindingTable() {
                         {/*TODO filter items that are not in findings already*/}
                         {hosts.map((host) => (
                             <div className="workspace-table-row deleted">
-                                <span className="workspace-data-certainty-icon workspace-finding-selection-arrow">
+                                <span
+                                    className="workspace-data-certainty-icon workspace-finding-selection-arrow"
+                                    onClick={() => onAddHost?.(host)}
+                                >
                                     <RelationLeftIcon />
                                 </span>
                                 <IpAddr host={host} />
@@ -165,7 +183,10 @@ export default function WorkspaceFindingTable() {
                         {/*TODO filter items that are not in findings already*/}
                         {ports.map((port) => (
                             <div className="workspace-table-row">
-                                <span className="workspace-data-certainty-icon workspace-finding-selection-arrow">
+                                <span
+                                    className="workspace-data-certainty-icon workspace-finding-selection-arrow"
+                                    onClick={() => onAddPort?.(port)}
+                                >
                                     <RelationLeftIcon />
                                 </span>
                                 <PortNumber port={port} />
@@ -210,7 +231,10 @@ export default function WorkspaceFindingTable() {
                         {/*TODO filter items that are not in findings already*/}
                         {services.map((service) => (
                             <div className="workspace-table-row">
-                                <span className="workspace-data-certainty-icon workspace-finding-selection-arrow">
+                                <span
+                                    className="workspace-data-certainty-icon workspace-finding-selection-arrow"
+                                    onClick={() => onAddService?.(service)}
+                                >
                                     <RelationLeftIcon />
                                 </span>
                                 <ServiceName service={service} />

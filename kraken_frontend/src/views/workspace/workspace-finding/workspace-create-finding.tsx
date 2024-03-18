@@ -2,7 +2,15 @@ import Editor from "@monaco-editor/react";
 import React, { ChangeEvent } from "react";
 import Select, { components } from "react-select";
 import { Api } from "../../../api/api";
-import { CreateFindingAffectedRequest, FindingSeverity, SimpleFindingDefinition } from "../../../api/generated";
+import {
+    CreateFindingAffectedRequest,
+    FindingSeverity,
+    FullDomain,
+    FullHost,
+    FullPort,
+    FullService,
+    SimpleFindingDefinition,
+} from "../../../api/generated";
 import { GithubMarkdown } from "../../../components/github-markdown";
 import { SelectPrimitive, selectStyles } from "../../../components/select-menu";
 import BookIcon from "../../../svg/book";
@@ -19,11 +27,25 @@ import { toast } from "react-toastify";
 import { ROUTES } from "../../../routes";
 import ArrowDownIcon from "../../../svg/arrow-down";
 import PlusIcon from "../../../svg/plus";
-import { ScreenshotInput } from "../components/screenshot-input";
+import Domain from "../components/domain";
+import IpAddr from "../components/host";
+import PortNumber from "../components/port";
+import { Screenshot, ScreenshotInput } from "../components/screenshot-input";
+import ServiceName from "../components/service";
 import TagList from "../components/tag-list";
 import WorkspaceFindingTable from "./workspace-finding-table";
 
 export type CreateFindingProps = {};
+
+type LocalAffected = CreateFindingAffectedRequest & {
+    _localScreenshot?: Screenshot;
+    _fileDataURL?: string;
+} & (
+        | { type: "Domain"; _data: FullDomain }
+        | { type: "Host"; _data: FullHost }
+        | { type: "Service"; _data: FullService }
+        | { type: "Port"; _data: FullPort }
+    );
 
 const SECTION = { definition: "Definition", description: "Description", affected: "Affected" };
 
@@ -40,8 +62,30 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
     const [fileDataURL, setFileDataURL] = React.useState<string | undefined>("");
     const [description, setDescription] = React.useState<boolean>(true);
     const [affectedVisible, setAffectedVisible] = React.useState<boolean>(true);
-    const [affected, setAffected] = React.useState<Array<CreateFindingAffectedRequest>>([]);
-    const [screenshotDataURL, setScreenshotDataURL] = React.useState<string | undefined>(undefined);
+    const [affected, setAffected] = React.useState<Array<LocalAffected>>([]);
+    const [screenshot, setScreenshotDataURL] = React.useState<Screenshot | undefined>(undefined);
+
+    const addAffected = (newAffected: LocalAffected) => {
+        setAffected((affected) => {
+            if (affected.some((a) => a.uuid == newAffected.uuid)) return affected;
+
+            return [
+                ...affected,
+                {
+                    _fileDataURL: undefined,
+                    _screenshotDataURL: undefined,
+                    ...newAffected,
+                },
+            ].sort((a, b) => {
+                if (a.type < b.type) return -1;
+                if (a.type > b.type) return 1;
+                // TODO: type-based sorters
+                if (a.uuid < b.uuid) return -1;
+                if (a.uuid > b.uuid) return 1;
+                return 0;
+            });
+        });
+    };
 
     const sections = useSectionsState();
 
@@ -101,7 +145,36 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
             case "affected":
                 return (
                     <div className="workspace-finding-data-table">
-                        <WorkspaceFindingTable />
+                        <WorkspaceFindingTable
+                            onAddDomain={(d) =>
+                                addAffected({
+                                    type: "Domain",
+                                    uuid: d.uuid,
+                                    _data: d,
+                                })
+                            }
+                            onAddHost={(d) =>
+                                addAffected({
+                                    type: "Host",
+                                    uuid: d.uuid,
+                                    _data: d,
+                                })
+                            }
+                            onAddPort={(d) =>
+                                addAffected({
+                                    type: "Port",
+                                    uuid: d.uuid,
+                                    _data: d,
+                                })
+                            }
+                            onAddService={(d) =>
+                                addAffected({
+                                    type: "Service",
+                                    uuid: d.uuid,
+                                    _data: d,
+                                })
+                            }
+                        />
                     </div>
                 );
             default:
@@ -118,23 +191,61 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
                 <div className="create-finding-container">
                     <form
                         className="create-finding-form"
-                        onSubmit={(e) => {
+                        onSubmit={async (e) => {
                             e.preventDefault();
                             if (findingDef === undefined) {
                                 return toast.error("Please select finding definition");
                             }
+
+                            const affectedUploaded = await Promise.all(
+                                affected.map(async (a) => {
+                                    let { _fileDataURL: file, _localScreenshot: screenshot, ...request } = a;
+                                    if (screenshot?.file !== undefined) {
+                                        let r = await Api.workspaces.files.uploadImage(
+                                            workspace,
+                                            screenshot.file.name,
+                                            screenshot.file,
+                                        );
+                                        request.screenshot = r.unwrap().uuid;
+                                    }
+                                    if (file !== undefined) {
+                                        // TODO: upload file
+                                    }
+                                    return request;
+                                }),
+                            ).catch((e) => {
+                                console.error("Failed uploading affected screenshot: ", e);
+                                return null;
+                            });
+                            if (affectedUploaded === null) {
+                                return toast.error("Some files for affected data couldn't be uploaded");
+                            }
+
+                            let screenshotUuid = screenshot?.file
+                                ? await Api.workspaces.files
+                                      .uploadImage(workspace, screenshot.file.name, screenshot.file)
+                                      .then((r) => r.unwrap().uuid)
+                                      .catch((e) => {
+                                          console.error("Failed uploading screenshot: ", e);
+                                          return null;
+                                      })
+                                : undefined;
+                            if (screenshotUuid === null) {
+                                return toast.error("Couldn't upload finding screenshot");
+                            }
+
                             Api.workspaces.findings
                                 .create(workspace, {
                                     severity: severity,
                                     definition: findingDef,
                                     details: sections.Description.value,
-                                    logFile: fileDataURL,
-                                    screenshot: screenshotDataURL,
+                                    logFile: undefined, // TODO: upload file
+                                    screenshot: screenshotUuid,
                                 })
                                 .then(
                                     handleApiError(async ({ uuid }) => {
                                         await Promise.all(
-                                            affected.map((a) =>
+                                            affectedUploaded.map((a) =>
                                                 Api.workspaces.findings
                                                     .addAffected(workspace, uuid, a)
                                                     .then(handleApiError()),
@@ -233,7 +344,55 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
                                     <ArrowDownIcon inverted={affectedVisible} />
                                 </div>
                             </h2>
-                            {affectedVisible ? <div>TODO affected</div> : <div />}
+                            {affectedVisible && (
+                                <div className="affected-list">
+                                    {affected.length > 0 ? (
+                                        affected.map((a) => (
+                                            <div className={`affected affected-${a.type}`}>
+                                                <div>
+                                                    {a.type == "Domain" ? (
+                                                        <Domain domain={a._data} pretty />
+                                                    ) : a.type == "Host" ? (
+                                                        <IpAddr host={a._data} pretty />
+                                                    ) : a.type == "Port" ? (
+                                                        <PortNumber port={a._data} pretty />
+                                                    ) : a.type == "Service" ? (
+                                                        <ServiceName service={a._data} pretty />
+                                                    ) : (
+                                                        "not implemented"
+                                                    )}
+                                                </div>
+                                                <TagList tags={a._data.tags} />
+                                                <ScreenshotInput
+                                                    shortText
+                                                    className="screenshot"
+                                                    screenshot={a._localScreenshot}
+                                                    onChange={(v) => {
+                                                        setAffected((affected) =>
+                                                            affected.map((orig) =>
+                                                                orig.uuid == a.uuid
+                                                                    ? {
+                                                                          ...orig,
+                                                                          _localScreenshot: v,
+                                                                      }
+                                                                    : orig,
+                                                            ),
+                                                        );
+                                                    }}
+                                                >
+                                                    <ScreenshotIcon />
+                                                </ScreenshotInput>
+                                                <div className="logfile">
+                                                    <FileIcon />
+                                                    Upload Attachment
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <p>No affected items yet</p>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
                         <div className="create-finding-files">
@@ -246,8 +405,8 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
                                 Log File
                             </h2>
                             <ScreenshotInput
-                                screenshotDataURL={screenshotDataURL}
-                                setScreenshotDataURL={setScreenshotDataURL}
+                                screenshot={screenshot}
+                                onChange={setScreenshotDataURL}
                                 className="create-finding-screenshot-container"
                             />
                             <div className="create-finding-file-container">
@@ -276,7 +435,6 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
                                 ) : undefined}
                             </div>
                         </div>
-                        {/*TODO Create finding on button click*/}
                         <button type={"submit"} className="button">
                             Create
                         </button>

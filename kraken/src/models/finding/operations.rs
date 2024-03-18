@@ -51,7 +51,6 @@ impl Finding {
         )
         .await?;
 
-        let finding_uuid = Uuid::new_v4();
         insert!(guard.get_transaction(), InsertFinding)
             .return_nothing()
             .single(&InsertFinding {
@@ -65,7 +64,7 @@ impl Finding {
 
         guard.commit().await?;
 
-        Ok(finding_uuid)
+        Ok(uuid)
     }
 
     /// Deletes a [`Finding`]
@@ -143,9 +142,13 @@ impl FindingAffected {
         match object_type {
             AggregationType::Domain => patch.domain = Some(ForeignModelByField::Key(object_uuid)),
             AggregationType::Host => patch.host = Some(ForeignModelByField::Key(object_uuid)),
-            AggregationType::Service => patch.port = Some(ForeignModelByField::Key(object_uuid)),
-            AggregationType::Port => patch.service = Some(ForeignModelByField::Key(object_uuid)),
+            AggregationType::Service => patch.service = Some(ForeignModelByField::Key(object_uuid)),
+            AggregationType::Port => patch.port = Some(ForeignModelByField::Key(object_uuid)),
         }
+
+        insert!(guard.get_transaction(), FindingAffected)
+            .single(&patch)
+            .await?;
 
         guard.commit().await?;
         Ok(uuid)

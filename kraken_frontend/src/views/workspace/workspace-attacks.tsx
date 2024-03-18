@@ -385,13 +385,13 @@ const ATTACKS: AllAttackDescr = {
             endpoint: "udpServiceDetection",
             jsonKey: "udpServiceDetectionRequest",
             inputs: {
-                address: {
-                    multi: false,
-                    label: "IP",
-                    defaultValue: "",
-                    prefill: ["ipAddr"],
-                    required: true,
+                targets: {
+                    label: "Domain / IP / net in CIDR",
+                    multi: true,
+                    defaultValue: undefined,
+                    prefill: ["domain", "ipAddr"],
                     type: StringAttackInput,
+                    required: true,
                 },
                 ports: {
                     label: "Ports",
@@ -471,12 +471,12 @@ const ATTACKS: AllAttackDescr = {
             endpoint: "osDetection",
             jsonKey: "osDetectionRequest",
             inputs: {
-                address: {
-                    defaultValue: "",
-                    prefill: ["ipAddr"],
-                    label: "IP",
+                targets: {
+                    label: "Domain / IP / net in CIDR",
+                    multi: true,
+                    defaultValue: undefined,
+                    prefill: ["domain", "ipAddr"],
                     type: StringAttackInput,
-                    multi: false,
                     required: true,
                 },
                 sshPort: {
@@ -533,6 +533,14 @@ const ATTACKS: AllAttackDescr = {
                     type: NumberAttackInput,
                     required: true,
                     multi: false,
+                },
+                concurrentLimit: {
+                    label: "Concurrency Limit",
+                    multi: false,
+                    defaultValue: 32,
+                    required: true,
+                    type: NumberAttackInput,
+                    group: "Advanced",
                 },
             },
         },

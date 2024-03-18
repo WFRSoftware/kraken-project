@@ -316,7 +316,7 @@
 }
 
 .workspace-finding-affected-selector{
-    margin: 1em 0;
+    margin-bottom: 0.5em;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     gap: 1em;
@@ -335,9 +335,6 @@
 
 .workspace-finding-affected-selector > .heading:hover {
     cursor: pointer;
-    --color: var(--primary-op);
-    --blur: 0.5em;
-    --offset: 0.1em;
     background-color: #00ccff10;
     transition: background-color 0.3s ease-out;
 }
@@ -352,6 +349,3 @@
 .workspace-finding-affected-selector > h3 {
     margin: 0.5em 0;
 }
-
-
-

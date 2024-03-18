@@ -3,7 +3,7 @@ import { WORKSPACE_CONTEXT } from "../workspace";
 import { SelectPrimitive, selectStyles } from "../../../components/select-menu";
 import { useSectionsState } from "../../knowledge-base/finding-definition/sections";
 import BookIcon from "../../../svg/book";
-import { FullDomain, FullHost, FullPort, FullService, SimpleFindingDefinition } from "../../../api/generated";
+import { CreateFindingAffectedRequest, SimpleFindingDefinition } from "../../../api/generated";
 import { Api } from "../../../api/api";
 import { handleApiError } from "../../../utils/helper";
 import Select from "react-select";
@@ -20,17 +20,6 @@ import Popup from "reactjs-popup";
 import PlusIcon from "../../../svg/plus";
 import ArrowDownIcon from "../../../svg/arrow-down";
 import WorkspaceFindingTable from "./workspace-finding-table";
-import { useFilter } from "../components/filter-input";
-import { StatelessWorkspaceTable, useTable } from "../components/workspace-table";
-import RelationLeftIcon from "../../../svg/relation-left";
-import Domain from "../components/domain";
-import TagList from "../components/tag-list";
-import { CertaintyIcon } from "../workspace-data";
-import IpAddr from "../components/host";
-import OsIcon from "../../../components/os-icon";
-import PortNumber from "../components/port";
-import ServiceName from "../components/service";
-import Indicator from "../../../components/indicator";
 
 export type CreateFindingProps = {};
 
@@ -50,7 +39,8 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
     const [fileDataURL, setFileDataURL] = React.useState<string | undefined>("");
     const [popup, setPopup] = React.useState<boolean>(false);
     const [description, setDescription] = React.useState<boolean>(true);
-    const [affected, setAffected] = React.useState<boolean>(true);
+    const [affectedVisible, setAffectedVisible] = React.useState<boolean>(true);
+    const [affected, setAffected] = React.useState<Array<CreateFindingAffectedRequest>>([]);
     const [drag, setDrag] = React.useState<boolean>(false);
 
     const inputRef = React.useRef<HTMLInputElement>(null);
@@ -252,11 +242,14 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
                             <h2 className={"sub-heading"}>
                                 <RelationLeftRightIcon />
                                 Affected
-                                <div className="create-finding-section-toggle" onClick={() => setAffected(!affected)}>
-                                    <ArrowDownIcon inverted={affected} />
+                                <div
+                                    className="create-finding-section-toggle"
+                                    onClick={() => setAffectedVisible(!affectedVisible)}
+                                >
+                                    <ArrowDownIcon inverted={affectedVisible} />
                                 </div>
                             </h2>
-                            {affected ? <FindingAffectedTable /> : <div />}
+                            {affectedVisible ? <div>TODO affected</div> : <div />}
                         </div>
 
                         <div className="create-finding-files">
@@ -402,43 +395,6 @@ export function FindingDefinitionDetails(props: SimpleFindingDefinition) {
                 {name} <small>{severity}</small>
             </h1>
             <p>{summary}</p>
-        </div>
-    );
-}
-
-const DATA_TAB = { domains: "Domains", hosts: "Hosts", ports: "Ports", services: "Services" };
-export function FindingAffectedTable() {
-    const {
-        workspace: { uuid: workspace },
-    } = React.useContext(WORKSPACE_CONTEXT);
-
-    const [dataTab, setDataTab] = React.useState<keyof typeof DATA_TAB>("hosts");
-
-    const tab = () => {
-        switch (dataTab) {
-            case "domains":
-                return <div></div>;
-            case "hosts":
-                return <div></div>;
-            case "ports":
-                return <div></div>;
-            case "services":
-                return <div></div>;
-        }
-    };
-
-    return (
-        <div>
-            <div className="workspace-finding-affected-selector">
-                {Object.entries(DATA_TAB).map(([key, displayName]) => (
-                    <h3
-                        className={"heading " + (dataTab !== key ? "" : "workspace-finding-affected-selected-tab")}
-                        onClick={() => setDataTab(key as keyof typeof DATA_TAB)}
-                    >
-                        {displayName}
-                    </h3>
-                ))}
-            </div>
         </div>
     );
 }

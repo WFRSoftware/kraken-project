@@ -73,7 +73,7 @@ export default function WorkspaceTable<T extends { uuid: string }>(props: Worksp
         columnsTemplate,
         onAdd,
         filter,
-        noBackground,
+        solidBackground: noBackground,
     });
 }
 
@@ -104,7 +104,7 @@ export type StatelessWorkspaceTableProps = {
 
     filter: FilterInputProps;
 
-    noBackground?: boolean;
+    solidBackground?: boolean;
 };
 export function StatelessWorkspaceTable(props: StatelessWorkspaceTableProps) {
     const {
@@ -117,7 +117,7 @@ export function StatelessWorkspaceTable(props: StatelessWorkspaceTableProps) {
         columnsTemplate,
         onAdd,
         filter,
-        noBackground,
+        solidBackground,
     } = props;
 
     const lastOffset = Math.floor(total / limit) * limit;
@@ -135,7 +135,11 @@ export function StatelessWorkspaceTable(props: StatelessWorkspaceTableProps) {
     const style: CSSProperties = { "--columns": columnsTemplate };
     return (
         <div
-            className={noBackground !== undefined && noBackground ? "workspace-table" : "workspace-table pane"}
+            className={
+                solidBackground !== undefined && solidBackground
+                    ? "workspace-table solid-background"
+                    : "workspace-table pane"
+            }
             style={style}
         >
             <div className={"workspace-table-pre-header"}>

@@ -3,7 +3,7 @@ import { WORKSPACE_CONTEXT } from "../workspace";
 import { SelectPrimitive, selectStyles } from "../../../components/select-menu";
 import { useSectionsState } from "../../knowledge-base/finding-definition/sections";
 import BookIcon from "../../../svg/book";
-import { SimpleFindingDefinition } from "../../../api/generated";
+import { FullDomain, FullHost, FullPort, FullService, SimpleFindingDefinition } from "../../../api/generated";
 import { Api } from "../../../api/api";
 import { handleApiError } from "../../../utils/helper";
 import Select from "react-select";
@@ -19,6 +19,18 @@ import InformationIcon from "../../../svg/information";
 import Popup from "reactjs-popup";
 import PlusIcon from "../../../svg/plus";
 import ArrowDownIcon from "../../../svg/arrow-down";
+import WorkspaceFindingTable from "./workspace-finding-table";
+import { useFilter } from "../components/filter-input";
+import { StatelessWorkspaceTable, useTable } from "../components/workspace-table";
+import RelationLeftIcon from "../../../svg/relation-left";
+import Domain from "../components/domain";
+import TagList from "../components/tag-list";
+import { CertaintyIcon } from "../workspace-data";
+import IpAddr from "../components/host";
+import OsIcon from "../../../components/os-icon";
+import PortNumber from "../components/port";
+import ServiceName from "../components/service";
+import Indicator from "../../../components/indicator";
 
 export type CreateFindingProps = {};
 
@@ -151,7 +163,11 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
                     />
                 );
             case "affected":
-                return <div></div>;
+                return (
+                    <div className="workspace-finding-data-table">
+                        <WorkspaceFindingTable />
+                    </div>
+                );
             default:
                 return "Unimplemented";
         }
@@ -240,7 +256,7 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
                                     <ArrowDownIcon inverted={affected} />
                                 </div>
                             </h2>
-                            {affected ? <div>blubb</div> : <div />}
+                            {affected ? <FindingAffectedTable /> : <div />}
                         </div>
 
                         <div className="create-finding-files">
@@ -252,7 +268,6 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
                                 <FileIcon />
                                 Log File
                             </h2>
-                            {/*TODO drag and drop image*/}
                             <div className="create-finding-screenshot-container">
                                 {screenshotDataURL ? (
                                     <button
@@ -317,7 +332,7 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
                                 {file ? (
                                     <div className="create-finding-file-grid">
                                         <button
-                                            title="remove file"
+                                            title="Remove file"
                                             className="button"
                                             onClick={() => {
                                                 setFileDataURL("");
@@ -366,7 +381,7 @@ export function WorkspaceCreateFinding(props: CreateFindingProps) {
                                 <RelationLeftRightIcon />
                             </button>
                         </div>
-                        <div className="create-finding-editor">{editor()}</div>
+                        {editor()}
                     </div>
                 </div>
             </div>
@@ -387,6 +402,43 @@ export function FindingDefinitionDetails(props: SimpleFindingDefinition) {
                 {name} <small>{severity}</small>
             </h1>
             <p>{summary}</p>
+        </div>
+    );
+}
+
+const DATA_TAB = { domains: "Domains", hosts: "Hosts", ports: "Ports", services: "Services" };
+export function FindingAffectedTable() {
+    const {
+        workspace: { uuid: workspace },
+    } = React.useContext(WORKSPACE_CONTEXT);
+
+    const [dataTab, setDataTab] = React.useState<keyof typeof DATA_TAB>("hosts");
+
+    const tab = () => {
+        switch (dataTab) {
+            case "domains":
+                return <div></div>;
+            case "hosts":
+                return <div></div>;
+            case "ports":
+                return <div></div>;
+            case "services":
+                return <div></div>;
+        }
+    };
+
+    return (
+        <div>
+            <div className="workspace-finding-affected-selector">
+                {Object.entries(DATA_TAB).map(([key, displayName]) => (
+                    <h3
+                        className={"heading " + (dataTab !== key ? "" : "workspace-finding-affected-selected-tab")}
+                        onClick={() => setDataTab(key as keyof typeof DATA_TAB)}
+                    >
+                        {displayName}
+                    </h3>
+                ))}
+            </div>
         </div>
     );
 }

@@ -8,6 +8,8 @@ import {
     SimplePort,
     SimpleService,
 } from "../api/generated";
+import { FullHttpService } from "../api/generated/models/FullHttpService";
+import { SimpleHttpService } from "../api/generated/models/SimpleHttpService";
 
 export function compareDomain(a: FullDomain | SimpleDomain, b: FullDomain | SimpleDomain): number {
     return a.domain.localeCompare(b.domain);
@@ -44,5 +46,22 @@ export function compareService(a: FullService | SimpleService, b: FullService | 
 export function comparePort(a: FullPort | SimplePort, b: FullPort | SimplePort): number {
     if (a.port != b.port) return a.port - b.port;
     if (typeof a.host != "string" && typeof b.host != "string") return compareHost(a.host, b.host);
+    else return 0;
+}
+
+export function compareHttpService(
+    a: FullHttpService | SimpleHttpService,
+    b: FullHttpService | SimpleHttpService,
+): number {
+    if (a.name != b.name) return a.name.localeCompare(b.name);
+    if (typeof a.domain != "string" && typeof b.domain != "string" && a.domain?.domain != b.domain?.domain)
+        return (a.domain?.domain ?? "").localeCompare(b.domain?.domain ?? "");
+    if (
+        typeof a.host != "string" &&
+        typeof b.host != "string" &&
+        typeof a.port != "string" &&
+        typeof b.port != "string"
+    )
+        return compareHost(a.host, b.host) || (a.port?.port ?? 0) - (b.port?.port ?? 0);
     else return 0;
 }

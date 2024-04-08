@@ -10,6 +10,7 @@ export * from './FilesApi';
 export * from './FindingsApi';
 export * from './GlobalTagsApi';
 export * from './HostsApi';
+export * from './HttpServicesApi';
 export * from './KnowledgeBaseApi';
 export * from './LeechManagementApi';
 export * from './OAuthApi';

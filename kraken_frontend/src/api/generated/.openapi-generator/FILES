@@ -8,6 +8,7 @@ apis/FilesApi.ts
 apis/FindingsApi.ts
 apis/GlobalTagsApi.ts
 apis/HostsApi.ts
+apis/HttpServicesApi.ts
 apis/KnowledgeBaseApi.ts
 apis/LeechManagementApi.ts
 apis/OAuthApi.ts
@@ -43,6 +44,7 @@ models/CreateFindingDefinitionRequest.ts
 models/CreateFindingRequest.ts
 models/CreateGlobalTagRequest.ts
 models/CreateHostRequest.ts
+models/CreateHttpServiceRequest.ts
 models/CreateLeechRequest.ts
 models/CreatePortRequest.ts
 models/CreateServiceRequest.ts
@@ -97,6 +99,7 @@ models/FullFindingAffected.ts
 models/FullFindingDefinition.ts
 models/FullGlobalTag.ts
 models/FullHost.ts
+models/FullHttpService.ts
 models/FullOauthClient.ts
 models/FullOauthDecision.ts
 models/FullOsDetectionResult.ts
@@ -114,6 +117,8 @@ models/GetAllDomainsQuery.ts
 models/GetAllDomainsQueryAllOf.ts
 models/GetAllHostsQuery.ts
 models/GetAllHostsQueryAllOf.ts
+models/GetAllHttpServicesQuery.ts
+models/GetAllHttpServicesQueryAllOf.ts
 models/GetAllPortsQuery.ts
 models/GetAllPortsQueryAllOf.ts
 models/GetAllServicesQuery.ts
@@ -123,6 +128,8 @@ models/HostCertainty.ts
 models/HostRelations.ts
 models/HostResultsPage.ts
 models/HostsAliveRequest.ts
+models/HttpServiceRelations.ts
+models/HttpServiceResultsPage.ts
 models/InviteToWorkspaceRequest.ts
 models/LeechConfig.ts
 models/LeechConfigAllOf.ts
@@ -224,6 +231,7 @@ models/SimpleFindingAffected.ts
 models/SimpleFindingDefinition.ts
 models/SimpleHost.ts
 models/SimpleHostAliveResult.ts
+models/SimpleHttpService.ts
 models/SimpleLeech.ts
 models/SimpleOauthClient.ts
 models/SimplePort.ts
@@ -257,6 +265,7 @@ models/UpdateFindingDefinitionRequest.ts
 models/UpdateFindingRequest.ts
 models/UpdateGlobalTag.ts
 models/UpdateHostRequest.ts
+models/UpdateHttpServiceRequest.ts
 models/UpdateLeechRequest.ts
 models/UpdateMeRequest.ts
 models/UpdatePortRequest.ts

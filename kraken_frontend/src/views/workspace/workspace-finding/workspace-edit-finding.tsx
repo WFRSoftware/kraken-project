@@ -20,6 +20,7 @@ import {
     SimpleTag,
     UpdateFindingRequest,
 } from "../../../api/generated";
+import { SimpleHttpService } from "../../../api/generated/models/SimpleHttpService";
 import WS from "../../../api/websocket";
 import { GithubMarkdown } from "../../../components/github-markdown";
 import ModelEditor from "../../../components/model-editor";
@@ -36,7 +37,13 @@ import PersonCircleIcon from "../../../svg/person-circle";
 import PlusIcon from "../../../svg/plus";
 import RelationLeftRightIcon from "../../../svg/relation-left-right";
 import ScreenshotIcon from "../../../svg/screenshot";
-import { compareDomain, compareHost, comparePort, compareService } from "../../../utils/data-sorter";
+import {
+    compareDomain,
+    compareHost,
+    compareHttpService,
+    comparePort,
+    compareService,
+} from "../../../utils/data-sorter";
 import { ObjectFns, handleApiError } from "../../../utils/helper";
 import { useModel, useModelStore } from "../../../utils/model-controller";
 import { useSyncedCursors } from "../../../utils/monaco-cursor";
@@ -44,6 +51,7 @@ import CollapsibleSection from "../components/collapsible-section";
 import Domain from "../components/domain";
 import { UploadingFileInput } from "../components/file-input";
 import IpAddr from "../components/host";
+import HttpServiceName from "../components/http-service";
 import PortNumber from "../components/port";
 import SelectFindingDefinition from "../components/select-finding-definition";
 import ServiceName from "../components/service";
@@ -347,6 +355,11 @@ export default function WorkspaceEditFinding(props: WorkspaceEditFindingProps) {
                                                     return comparePort(aObj as SimplePort, bObj as SimplePort);
                                                 case "Service":
                                                     return compareService(aObj as SimpleService, bObj as SimpleService);
+                                                case "HttpService":
+                                                    return compareHttpService(
+                                                        aObj as SimpleHttpService,
+                                                        bObj as SimpleHttpService,
+                                                    );
                                                 default:
                                                     return 0;
                                             }
@@ -544,6 +557,9 @@ export default function WorkspaceEditFinding(props: WorkspaceEditFindingProps) {
                                             onAddServices={(v) =>
                                                 v.map(({ uuid }) => addAffected(uuid, AggregationType.Service))
                                             }
+                                            onAddHttpServices={(v) =>
+                                                v.map(({ uuid }) => addAffected(uuid, AggregationType.HttpService))
+                                            }
                                         />
                                     </div>
                                 );
@@ -668,6 +684,7 @@ export function AffectedLabel({ pretty, affected }: AffectedLabelProps) {
     if (isAffectedDomain(affected)) return <Domain domain={affected.domain} pretty={pretty} />;
     if (isAffectedHost(affected)) return <IpAddr host={affected.host} pretty={pretty} />;
     if (isAffectedPort(affected)) return <PortNumber port={affected.port} pretty={pretty} />;
+    if (isAffectedHttpService(affected)) return <HttpServiceName httpService={affected.httpService} pretty={pretty} />;
     else return <ServiceName service={affected.service} pretty={pretty} />;
 }
 
@@ -687,11 +704,16 @@ function isAffectedService(obj: FindingAffectedObject): obj is FindingAffectedOb
     return "service" in obj && obj["service"] !== undefined;
 }
 
+function isAffectedHttpService(obj: FindingAffectedObject): obj is FindingAffectedObjectOneOf4 {
+    return "httpService" in obj && obj["httpService"] !== undefined;
+}
+
 export function getAffectedType({ affected }: { affected: FindingAffectedObject }): AggregationType {
     if (isAffectedDomain(affected)) return AggregationType.Domain;
     if (isAffectedHost(affected)) return AggregationType.Host;
     if (isAffectedPort(affected)) return AggregationType.Port;
     if (isAffectedService(affected)) return AggregationType.Service;
+    if (isAffectedHttpService(affected)) return AggregationType.HttpService;
     const _exhaustiveCheck: never = affected;
     throw new Error("unknown affected type?!");
 }
@@ -701,6 +723,7 @@ export function getAffectedData({ affected }: { affected: FindingAffectedObject 
     if (isAffectedHost(affected)) return affected.host;
     if (isAffectedPort(affected)) return affected.port;
     if (isAffectedService(affected)) return affected.service;
+    if (isAffectedHttpService(affected)) return affected.httpService;
     const _exhaustiveCheck: never = affected;
     throw new Error("unknown affected type?!");
 }

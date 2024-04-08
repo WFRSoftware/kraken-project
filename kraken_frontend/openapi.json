@@ -6160,6 +6160,75 @@
                 ]
             }
         },
+        "/api/v1/workspaces/{uuid}/httpServices": {
+            "post": {
+                "tags": [
+                    "Http Services"
+                ],
+                "summary": "Manually add a http service",
+                "description": "Manually add a http service",
+                "operationId": "create_http_service",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "description": "The uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateHttpServiceRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Http service was created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UuidResponse"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Client error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
         "/api/v1/workspaces/{uuid}/httpServices/all": {
             "post": {
                 "tags": [
@@ -7864,6 +7933,343 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/FullHttpService"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Client error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Http Services"
+                ],
+                "summary": "Update a http service",
+                "description": "Update a http service\n\nYou must include at least on parameter",
+                "operationId": "update_http_service",
+                "parameters": [
+                    {
+                        "name": "w_uuid",
+                        "in": "path",
+                        "description": "Workspace uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "hs_uuid",
+                        "in": "path",
+                        "description": "Http service uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateHttpServiceRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Http service was updated"
+                    },
+                    "400": {
+                        "description": "Client error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Http Services"
+                ],
+                "summary": "Delete the http service",
+                "description": "Delete the http service\n\nThis only deletes the aggregation. The raw results are still in place",
+                "operationId": "delete_http_service",
+                "parameters": [
+                    {
+                        "name": "w_uuid",
+                        "in": "path",
+                        "description": "Workspace uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "hs_uuid",
+                        "in": "path",
+                        "description": "Http service uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Http service was deleted"
+                    },
+                    "400": {
+                        "description": "Client error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/workspaces/{w_uuid}/httpServices/{hs_uuid}/findings": {
+            "get": {
+                "tags": [
+                    "Http Services"
+                ],
+                "summary": "Get a http service's findings",
+                "description": "Get a http service's findings",
+                "operationId": "get_http_service_findings",
+                "parameters": [
+                    {
+                        "name": "w_uuid",
+                        "in": "path",
+                        "description": "Workspace uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "hs_uuid",
+                        "in": "path",
+                        "description": "Http service uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The http service's findings",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListFindings"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Client error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/workspaces/{w_uuid}/httpServices/{hs_uuid}/relations": {
+            "get": {
+                "tags": [
+                    "Http Services"
+                ],
+                "summary": "Get a http service's direct relations",
+                "description": "Get a http service's direct relations",
+                "operationId": "get_http_service_relations",
+                "parameters": [
+                    {
+                        "name": "w_uuid",
+                        "in": "path",
+                        "description": "Workspace uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "hs_uuid",
+                        "in": "path",
+                        "description": "Http service uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The http service's relations",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HttpServiceRelations"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Client error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponse"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiErrorResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/workspaces/{w_uuid}/httpServices/{hs_uuid}/sources": {
+            "get": {
+                "tags": [
+                    "Http Services"
+                ],
+                "summary": "Get all data sources which referenced this http service",
+                "description": "Get all data sources which referenced this http service",
+                "operationId": "get_http_service_sources",
+                "parameters": [
+                    {
+                        "name": "w_uuid",
+                        "in": "path",
+                        "description": "Workspace uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "name": "hs_uuid",
+                        "in": "path",
+                        "description": "Http service uuid",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The http service's sources",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FullAggregationSource"
                                 }
                             }
                         }
@@ -10115,7 +10521,8 @@
                     "source_domains",
                     "target_domains",
                     "direct_hosts",
-                    "indirect_hosts"
+                    "indirect_hosts",
+                    "http_services"
                 ],
                 "properties": {
                     "source_domains": {
@@ -10145,6 +10552,13 @@
                             "$ref": "#/components/schemas/SimpleHost"
                         },
                         "description": "All hosts any `target_domains` resolves to"
+                    },
+                    "http_services": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SimpleHttpService"
+                        },
+                        "description": "This domain's http services"
                     }
                 }
             },
@@ -10333,6 +10747,17 @@
                         "properties": {
                             "Service": {
                                 "$ref": "#/components/schemas/SimpleService"
+                            }
+                        }
+                    },
+                    {
+                        "type": "object",
+                        "required": [
+                            "HttpService"
+                        ],
+                        "properties": {
+                            "HttpService": {
+                                "$ref": "#/components/schemas/SimpleHttpService"
                             }
                         }
                     }
@@ -10960,7 +11385,7 @@
                     },
                     "name": {
                         "type": "string",
-                        "description": "The service's name"
+                        "description": "The http service's name"
                     },
                     "domain": {
                         "allOf": [
@@ -10978,7 +11403,7 @@
                     },
                     "base_path": {
                         "type": "string",
-                        "description": "The base path the service is routed on"
+                        "description": "The base path the http service is routed on"
                     },
                     "tls": {
                         "type": "boolean",
@@ -10986,7 +11411,7 @@
                     },
                     "sni_required": {
                         "type": "boolean",
-                        "description": "Does this service require sni?"
+                        "description": "Does this http service require sni?"
                     },
                     "comment": {
                         "type": "string",
@@ -11856,7 +12281,8 @@
                     "ports",
                     "services",
                     "direct_domains",
-                    "indirect_domains"
+                    "indirect_domains",
+                    "http_services"
                 ],
                 "properties": {
                     "ports": {
@@ -11886,6 +12312,13 @@
                             "$ref": "#/components/schemas/SimpleDomain"
                         },
                         "description": "Domains pointing to this host via a `CNAME` record which eventually resolves to the host"
+                    },
+                    "http_services": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SimpleHttpService"
+                        },
+                        "description": "This host's http services"
                     }
                 }
             },
@@ -12562,6 +12995,74 @@
                                 ]
                             }
                         }
+                    },
+                    {
+                        "type": "object",
+                        "description": "A manually inserted http service",
+                        "required": [
+                            "name",
+                            "ip_addr",
+                            "port",
+                            "base_path",
+                            "tls",
+                            "sni_require",
+                            "user",
+                            "workspace",
+                            "created_at",
+                            "type"
+                        ],
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "The service's name"
+                            },
+                            "domain": {
+                                "type": "string",
+                                "description": "The service's domain",
+                                "nullable": true
+                            },
+                            "ip_addr": {
+                                "type": "string",
+                                "description": "The service's ip address"
+                            },
+                            "port": {
+                                "type": "integer",
+                                "format": "int32",
+                                "description": "The service's port",
+                                "minimum": 0
+                            },
+                            "base_path": {
+                                "type": "string",
+                                "description": "The base path the service is routed on"
+                            },
+                            "tls": {
+                                "type": "boolean",
+                                "description": "Is this a https service?"
+                            },
+                            "sni_require": {
+                                "type": "boolean",
+                                "description": "Does this service require sni?"
+                            },
+                            "user": {
+                                "$ref": "#/components/schemas/SimpleUser"
+                            },
+                            "workspace": {
+                                "type": "string",
+                                "format": "uuid",
+                                "description": "The workspace the http service was inserted to"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "date-time",
+                                "description": "The point in time, the http service was inserted"
+                            },
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "HttpService"
+                                ]
+                            }
+                        }
                     }
                 ],
                 "description": "The different types of manual inserts",
@@ -12805,7 +13306,8 @@
                 "description": "A port's direct relations",
                 "required": [
                     "host",
-                    "services"
+                    "services",
+                    "http_services"
                 ],
                 "properties": {
                     "host": {
@@ -12817,6 +13319,13 @@
                             "$ref": "#/components/schemas/SimpleService"
                         },
                         "description": "Services listening on this port"
+                    },
+                    "http_services": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SimpleHttpService"
+                        },
+                        "description": "Http services listening on this port"
                     }
                 }
             },
@@ -14293,27 +14802,27 @@
                     },
                     "name": {
                         "type": "string",
-                        "description": "The service's name"
+                        "description": "The http service's name"
                     },
                     "domain": {
                         "type": "string",
                         "format": "uuid",
-                        "description": "The service's domain",
+                        "description": "The http service's domain",
                         "nullable": true
                     },
                     "host": {
                         "type": "string",
                         "format": "uuid",
-                        "description": "The service's ip address"
+                        "description": "The http service's ip address"
                     },
                     "port": {
                         "type": "string",
                         "format": "uuid",
-                        "description": "The service's port"
+                        "description": "The http service's port"
                     },
                     "base_path": {
                         "type": "string",
-                        "description": "The base path the service is routed on"
+                        "description": "The base path the http service is routed on"
                     },
                     "tls": {
                         "type": "boolean",
@@ -14321,7 +14830,7 @@
                     },
                     "sni_required": {
                         "type": "boolean",
-                        "description": "Does this service require sni?"
+                        "description": "Does this http service require sni?"
                     },
                     "comment": {
                         "type": "string",
@@ -16127,6 +16636,31 @@
                     },
                     {
                         "type": "object",
+                        "description": "A new http service was found",
+                        "required": [
+                            "workspace",
+                            "http_service",
+                            "type"
+                        ],
+                        "properties": {
+                            "workspace": {
+                                "type": "string",
+                                "format": "uuid",
+                                "description": "The workspace this http service is related to"
+                            },
+                            "http_service": {
+                                "$ref": "#/components/schemas/SimpleHttpService"
+                            },
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "NewHttpService"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "object",
                         "description": "A domain was deleted",
                         "required": [
                             "workspace",
@@ -16229,6 +16763,33 @@
                                 "type": "string",
                                 "enum": [
                                     "DeletedService"
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "type": "object",
+                        "description": "A http service was deleted",
+                        "required": [
+                            "workspace",
+                            "http_service",
+                            "type"
+                        ],
+                        "properties": {
+                            "workspace": {
+                                "type": "string",
+                                "format": "uuid",
+                                "description": "The workspace this http service is related to"
+                            },
+                            "http_service": {
+                                "type": "string",
+                                "format": "uuid",
+                                "description": "The uuid of the deleted http service"
+                            },
+                            "type": {
+                                "type": "string",
+                                "enum": [
+                                    "DeletedHttpService"
                                 ]
                             }
                         }

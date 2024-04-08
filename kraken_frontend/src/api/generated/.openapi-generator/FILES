@@ -83,6 +83,7 @@ models/FindingAffectedObjectOneOf.ts
 models/FindingAffectedObjectOneOf1.ts
 models/FindingAffectedObjectOneOf2.ts
 models/FindingAffectedObjectOneOf3.ts
+models/FindingAffectedObjectOneOf4.ts
 models/FindingDefinitionUsage.ts
 models/FindingSection.ts
 models/FindingSeverity.ts
@@ -156,6 +157,7 @@ models/ManualInsertOneOf.ts
 models/ManualInsertOneOf1.ts
 models/ManualInsertOneOf2.ts
 models/ManualInsertOneOf3.ts
+models/ManualInsertOneOf4.ts
 models/ManualPortCertainty.ts
 models/ManualServiceCertainty.ts
 models/OpenRequestInfo.ts
@@ -308,6 +310,8 @@ models/WsMessageOneOf3.ts
 models/WsMessageOneOf30.ts
 models/WsMessageOneOf31.ts
 models/WsMessageOneOf32.ts
+models/WsMessageOneOf33.ts
+models/WsMessageOneOf34.ts
 models/WsMessageOneOf4.ts
 models/WsMessageOneOf5.ts
 models/WsMessageOneOf6.ts

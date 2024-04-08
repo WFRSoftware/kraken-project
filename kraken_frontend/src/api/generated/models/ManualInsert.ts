@@ -26,6 +26,12 @@ import {
     ManualInsertOneOf3FromJSONTyped,
     ManualInsertOneOf3ToJSON,
 } from './ManualInsertOneOf3';
+import {
+    ManualInsertOneOf4,
+    ManualInsertOneOf4TypeEnum,
+    ManualInsertOneOf4FromJSONTyped,
+    ManualInsertOneOf4ToJSON,
+} from './ManualInsertOneOf4';
 
 /**
  * @type ManualInsert
@@ -36,7 +42,8 @@ export type ManualInsert =
   | ManualInsertOneOf
   | ManualInsertOneOf1
   | ManualInsertOneOf2
-  | ManualInsertOneOf3;
+  | ManualInsertOneOf3
+  | ManualInsertOneOf4;
 
 function enumToString<T extends string>(obj: Record<T, T>): T {
     // @ts-ignore
@@ -47,6 +54,7 @@ const ManualInsertOneOfType = enumToString(ManualInsertOneOfTypeEnum);
 const ManualInsertOneOf1Type = enumToString(ManualInsertOneOf1TypeEnum);
 const ManualInsertOneOf2Type = enumToString(ManualInsertOneOf2TypeEnum);
 const ManualInsertOneOf3Type = enumToString(ManualInsertOneOf3TypeEnum);
+const ManualInsertOneOf4Type = enumToString(ManualInsertOneOf4TypeEnum);
 
 export function ManualInsertFromJSON(json: any): ManualInsert {
     return ManualInsertFromJSONTyped(json, false);
@@ -66,6 +74,8 @@ export function ManualInsertFromJSONTyped(json: any, ignoreDiscriminator: boolea
             return ManualInsertOneOf2FromJSONTyped(json, ignoreDiscriminator);
         case ManualInsertOneOf3Type:
             return ManualInsertOneOf3FromJSONTyped(json, ignoreDiscriminator);
+        case ManualInsertOneOf4Type:
+            return ManualInsertOneOf4FromJSONTyped(json, ignoreDiscriminator);
         default:
             throw new Error("No variant of ManualInsert exists with 'type=" + json["type"] + "'");
     }
@@ -88,6 +98,8 @@ export function ManualInsertToJSON(value?: ManualInsert | null): any {
             return ManualInsertOneOf2ToJSON(value);
         case ManualInsertOneOf3Type:
             return ManualInsertOneOf3ToJSON(value);
+        case ManualInsertOneOf4Type:
+            return ManualInsertOneOf4ToJSON(value);
         default:
             throw new Error("No variant of ManualInsert exists with 'type=" + value["type"] + "'");
     }

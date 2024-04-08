@@ -63,7 +63,7 @@ export interface FullHttpService {
      */
     uuid: string;
     /**
-     * The service's name
+     * The http service's name
      * @type {string}
      * @memberof FullHttpService
      */
@@ -87,7 +87,7 @@ export interface FullHttpService {
      */
     port: SimplePort;
     /**
-     * The base path the service is routed on
+     * The base path the http service is routed on
      * @type {string}
      * @memberof FullHttpService
      */
@@ -99,7 +99,7 @@ export interface FullHttpService {
      */
     tls: boolean;
     /**
-     * Does this service require sni?
+     * Does this http service require sni?
      * @type {boolean}
      * @memberof FullHttpService
      */

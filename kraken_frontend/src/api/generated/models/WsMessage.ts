@@ -165,6 +165,18 @@ import {
     WsMessageOneOf32ToJSON,
 } from './WsMessageOneOf32';
 import {
+    WsMessageOneOf33,
+    WsMessageOneOf33TypeEnum,
+    WsMessageOneOf33FromJSONTyped,
+    WsMessageOneOf33ToJSON,
+} from './WsMessageOneOf33';
+import {
+    WsMessageOneOf34,
+    WsMessageOneOf34TypeEnum,
+    WsMessageOneOf34FromJSONTyped,
+    WsMessageOneOf34ToJSON,
+} from './WsMessageOneOf34';
+import {
     WsMessageOneOf4,
     WsMessageOneOf4TypeEnum,
     WsMessageOneOf4FromJSONTyped,
@@ -234,6 +246,8 @@ export type WsMessage =
   | WsMessageOneOf30
   | WsMessageOneOf31
   | WsMessageOneOf32
+  | WsMessageOneOf33
+  | WsMessageOneOf34
   | WsMessageOneOf4
   | WsMessageOneOf5
   | WsMessageOneOf6
@@ -273,6 +287,8 @@ const WsMessageOneOf3Type = enumToString(WsMessageOneOf3TypeEnum);
 const WsMessageOneOf30Type = enumToString(WsMessageOneOf30TypeEnum);
 const WsMessageOneOf31Type = enumToString(WsMessageOneOf31TypeEnum);
 const WsMessageOneOf32Type = enumToString(WsMessageOneOf32TypeEnum);
+const WsMessageOneOf33Type = enumToString(WsMessageOneOf33TypeEnum);
+const WsMessageOneOf34Type = enumToString(WsMessageOneOf34TypeEnum);
 const WsMessageOneOf4Type = enumToString(WsMessageOneOf4TypeEnum);
 const WsMessageOneOf5Type = enumToString(WsMessageOneOf5TypeEnum);
 const WsMessageOneOf6Type = enumToString(WsMessageOneOf6TypeEnum);
@@ -344,6 +360,10 @@ export function WsMessageFromJSONTyped(json: any, ignoreDiscriminator: boolean):
             return WsMessageOneOf31FromJSONTyped(json, ignoreDiscriminator);
         case WsMessageOneOf32Type:
             return WsMessageOneOf32FromJSONTyped(json, ignoreDiscriminator);
+        case WsMessageOneOf33Type:
+            return WsMessageOneOf33FromJSONTyped(json, ignoreDiscriminator);
+        case WsMessageOneOf34Type:
+            return WsMessageOneOf34FromJSONTyped(json, ignoreDiscriminator);
         case WsMessageOneOf4Type:
             return WsMessageOneOf4FromJSONTyped(json, ignoreDiscriminator);
         case WsMessageOneOf5Type:
@@ -424,6 +444,10 @@ export function WsMessageToJSON(value?: WsMessage | null): any {
             return WsMessageOneOf31ToJSON(value);
         case WsMessageOneOf32Type:
             return WsMessageOneOf32ToJSON(value);
+        case WsMessageOneOf33Type:
+            return WsMessageOneOf33ToJSON(value);
+        case WsMessageOneOf34Type:
+            return WsMessageOneOf34ToJSON(value);
         case WsMessageOneOf4Type:
             return WsMessageOneOf4ToJSON(value);
         case WsMessageOneOf5Type:

@@ -26,31 +26,31 @@ export interface SimpleHttpService {
      */
     uuid: string;
     /**
-     * The service's name
+     * The http service's name
      * @type {string}
      * @memberof SimpleHttpService
      */
     name: string;
     /**
-     * The service's domain
+     * The http service's domain
      * @type {string}
      * @memberof SimpleHttpService
      */
     domain?: string | null;
     /**
-     * The service's ip address
+     * The http service's ip address
      * @type {string}
      * @memberof SimpleHttpService
      */
     host: string;
     /**
-     * The service's port
+     * The http service's port
      * @type {string}
      * @memberof SimpleHttpService
      */
     port: string;
     /**
-     * The base path the service is routed on
+     * The base path the http service is routed on
      * @type {string}
      * @memberof SimpleHttpService
      */
@@ -62,7 +62,7 @@ export interface SimpleHttpService {
      */
     tls: boolean;
     /**
-     * Does this service require sni?
+     * Does this http service require sni?
      * @type {boolean}
      * @memberof SimpleHttpService
      */

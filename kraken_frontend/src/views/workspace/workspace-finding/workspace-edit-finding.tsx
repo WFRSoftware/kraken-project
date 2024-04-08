@@ -39,6 +39,7 @@ import PlusIcon from "../../../svg/plus";
 import RelationLeftRightIcon from "../../../svg/relation-left-right";
 import ScreenshotIcon from "../../../svg/screenshot";
 import {
+    aggregationTypeOrdering,
     compareDomain,
     compareHost,
     compareHttpService,
@@ -339,8 +340,10 @@ export default function WorkspaceEditFinding(props: WorkspaceEditFindingProps) {
                                         .sort(([_1, a], [_2, b]) => {
                                             const aType = getAffectedType(a);
                                             const bType = getAffectedType(b);
-                                            if (aType < bType) return -1;
-                                            if (aType > bType) return 1;
+                                            if (aggregationTypeOrdering[aType] < aggregationTypeOrdering[bType])
+                                                return -1;
+                                            if (aggregationTypeOrdering[aType] > aggregationTypeOrdering[bType])
+                                                return 1;
                                             const aObj = getAffectedData(a);
                                             const bObj = getAffectedData(b);
                                             switch (aType) {

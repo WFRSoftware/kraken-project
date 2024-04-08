@@ -1,4 +1,5 @@
 import {
+    AggregationType,
     FullDomain,
     FullHost,
     FullPort,
@@ -10,6 +11,14 @@ import {
 } from "../api/generated";
 import { FullHttpService } from "../api/generated/models/FullHttpService";
 import { SimpleHttpService } from "../api/generated/models/SimpleHttpService";
+
+export const aggregationTypeOrdering: { [K in AggregationType]: number } = {
+    Domain: 0,
+    Host: 1,
+    Port: 2,
+    Service: 3,
+    HttpService: 4,
+};
 
 export function compareDomain(a: FullDomain | SimpleDomain, b: FullDomain | SimpleDomain): number {
     return a.domain.localeCompare(b.domain);

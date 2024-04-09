@@ -1,6 +1,7 @@
 import { OsType, PortProtocol } from "../../api/generated";
 import { Cursor } from "./cursor";
 import {
+    parseBoolean,
     parseDate,
     parseOsType,
     parsePort,
@@ -360,7 +361,78 @@ export const ASTFields = {
             columns: ["createdAt"],
             parse: wrapRange(parseDate),
         },
-        // TODO
+        ips: {
+            label: "IPs",
+            columns: ["ips", "ip"],
+            parse: parseString,
+        },
+        ipsCreatedAt: {
+            label: "IP creation date",
+            columns: ["ips.createdAt", "ip.createdAt"],
+            parse: wrapRange(parseDate),
+            advanced: true,
+        },
+        ipsTags: {
+            label: "IP tags",
+            columns: ["ips.tags", "ips.tag", "ip.tags", "ip.tag"],
+            parse: parseString,
+            advanced: true,
+        },
+        ipsOs: {
+            label: "Host OS",
+            columns: ["ips.os", "ip.os"],
+            parse: parseOsType,
+            advanced: true,
+        },
+        ports: {
+            label: "Port",
+            columns: ["ports", "port"],
+            parse: wrapMaybeRange(parsePort),
+        },
+        portsTags: {
+            label: "Port tags",
+            columns: ["ports.tags", "ports.tag", "port.tags", "port.tag"],
+            parse: parseString,
+            advanced: true,
+        },
+        portsCreatedAt: {
+            label: "Port creation date",
+            columns: ["ports.createdAt", "port.createdAt"],
+            parse: wrapRange(parseDate),
+            advanced: true,
+        },
+        domains: {
+            label: "Domains",
+            columns: ["domains", "domain"],
+            parse: parseString,
+        },
+        domainsTags: {
+            label: "Domain tags",
+            columns: ["domains.tags", "domains.tag", "domain.tags", "domain.tag"],
+            parse: parseString,
+            advanced: true,
+        },
+        domainsCreatedAt: {
+            label: "Domain creation date",
+            columns: ["domains.createdAt", "domain.createdAt"],
+            parse: wrapRange(parseDate),
+            advanced: true,
+        },
+        httpServices: {
+            label: "HTTP Services",
+            columns: ["httpServices", "httpService"],
+            parse: parseString,
+        },
+        tls: {
+            label: "TLS",
+            columns: ["tls"],
+            parse: parseBoolean,
+        },
+        sni: {
+            label: "SNI required",
+            columns: ["sni"],
+            parse: parseBoolean,
+        },
     },
 } satisfies { [ast: string]: ASTField };
 

@@ -1,8 +1,10 @@
 import React from "react";
 import { toast } from "react-toastify";
 import { Api } from "../../../api/api";
+import { PortProtocol } from "../../../api/generated";
 import Checkbox from "../../../components/checkbox";
 import Input from "../../../components/input";
+import { SelectPrimitive } from "../../../components/select-menu";
 import { handleApiError } from "../../../utils/helper";
 import { WORKSPACE_CONTEXT } from "../workspace";
 
@@ -22,6 +24,7 @@ export function CreateHttpServiceForm(props: CreateHttpServiceFormProps) {
     // const [certy, setCerty] = React.useState<ManualHttpServiceCertainty>("SupposedTo");
     const [tls, setTls] = React.useState(true);
     const [port, setPort] = React.useState("443");
+    const [portProtocol, setPortProtocol] = React.useState<PortProtocol>(PortProtocol.Tcp);
     const [sniRequired, setSniRequired] = React.useState(false);
     return (
         <form
@@ -42,6 +45,7 @@ export function CreateHttpServiceForm(props: CreateHttpServiceFormProps) {
                         basePath,
                         tls,
                         sniRequire: sniRequired,
+                        portProtocol: portProtocol,
                         // certainty: certy,
                     })
                     .then(
@@ -77,10 +81,17 @@ export function CreateHttpServiceForm(props: CreateHttpServiceFormProps) {
                     }}
                 />
             </label>
-            <label>
-                Port:
-                <Input value={port} type="number" onChange={setPort} required min={1} max={65535} />
-            </label>
+            <div className="label">
+                <label htmlFor="port">Port:</label>
+                <div className="port-protocol">
+                    <Input id="port" value={port} type="number" onChange={setPort} required min={1} max={65535} />
+                    <SelectPrimitive
+                        options={Object.values(PortProtocol)}
+                        value={portProtocol}
+                        onChange={(value) => setPortProtocol(value || portProtocol)}
+                    />
+                </div>
+            </div>
             <label>
                 Base Path:
                 <Input value={basePath} onChange={setBasePath} />

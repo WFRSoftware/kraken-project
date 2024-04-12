@@ -94,15 +94,15 @@ pub fn from_http_service_join_host() -> impl for<'a> RawJoin<'a> {
 }
 pub fn from_http_service_join_domain() -> impl for<'a> RawJoin<'a> {
     |sql: &mut String, _: &mut Vec<Value>| {
-        let service = sql_name!(HttpService);
-        let service_host = sql_name!(HttpService::F.domain);
+        let http_service = sql_name!(HttpService);
+        let http_service_domain = sql_name!(HttpService::F.domain);
 
-        let host = sql_name!(Domain);
-        let host_uuid = sql_name!(Domain::F.uuid);
+        let domain = sql_name!(Domain);
+        let domain_uuid = sql_name!(Domain::F.uuid);
 
         write!(
             sql,
-            r#"JOIN "{host}" ON "{service}"."{service_host}" = "{host}"."{host_uuid}""#
+            r#"JOIN "{domain}" ON "{http_service}"."{http_service_domain}" = "{domain}"."{domain_uuid}""#
         )
     }
 }

@@ -458,11 +458,14 @@ impl HttpServiceAST {
         if self.ips_tags.is_some() {
             sql.append_join(JoinTags::host().alias("host_tags"));
         }
-        if self.domains_created_at.is_some() || self.domains_tags.is_some() {
+        if self.domains.is_some()
+            || self.domains_created_at.is_some()
+            || self.domains_tags.is_some()
+        {
             sql.append_join(from_http_service_join_domain());
         }
         if self.domains_tags.is_some() {
-            sql.append_join(JoinTags::host().alias("domain_tags")); // TODO: does this work since domain might be null?
+            sql.append_join(JoinTags::domain().alias("domain_tags")); // TODO: does this work since domain might be null?
         }
 
         let HttpServiceAST {

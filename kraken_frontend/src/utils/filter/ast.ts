@@ -477,11 +477,13 @@ type FieldTypeValue<key, T> = key extends "tags" | `${string}Tags`
           ? "ostype"
           : T extends number
             ? "number" | "port"
-            : T extends string
-              ? "string" | "domain" | "host" | "service" | "httpService" | "transport"
-              : T extends Date
-                ? "date"
-                : never;
+            : T extends boolean
+              ? "boolean"
+              : T extends string
+                ? "string" | "domain" | "host" | "service" | "httpService" | "transport"
+                : T extends Date
+                  ? "date"
+                  : never;
 
 export const ASTFieldTypes = {
     global: {
@@ -554,7 +556,20 @@ export const ASTFieldTypes = {
     httpService: {
         tags: "tags",
         createdAt: "mayberange.date",
-        // TODO
+        ips: "host",
+        ipsCreatedAt: "mayberange.date",
+        ipsTags: "tags",
+        ipsOs: "ostype",
+        ports: "port",
+        portsTags: "tags",
+        portsCreatedAt: "mayberange.date",
+        domains: "domain",
+        domainsTags: "tags",
+        domainsCreatedAt: "mayberange.date",
+        httpServices: "httpService",
+        basePaths: "string",
+        tls: "boolean",
+        sni: "boolean",
     },
 } satisfies { [K in keyof typeof ASTFields]: FieldTypes<ASTType<(typeof ASTFields)[K]>> };
 

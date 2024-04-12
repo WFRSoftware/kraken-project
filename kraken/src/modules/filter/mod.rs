@@ -247,6 +247,9 @@ pub struct HttpServiceAST {
     /// Filter by HTTP service name
     pub http_services: Option<Or<String>>,
 
+    /// Filter by HTTP service base path
+    pub base_paths: Option<Or<String>>,
+
     /// Filter http services by TLS or non-TLS
     pub tls: Option<Or<bool>>,
 

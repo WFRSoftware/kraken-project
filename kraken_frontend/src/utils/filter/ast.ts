@@ -423,6 +423,11 @@ export const ASTFields = {
             columns: ["httpServices", "httpService"],
             parse: parseString,
         },
+        basePaths: {
+            label: "Base Path",
+            columns: ["basePaths", "basePath"],
+            parse: parseString,
+        },
         tls: {
             label: "TLS",
             columns: ["tls"],

@@ -479,6 +479,7 @@ impl HttpServiceAST {
             domains_tags,
             domains_created_at,
             http_services,
+            base_paths,
             tls,
             sni,
         } = self;
@@ -492,6 +493,7 @@ impl HttpServiceAST {
 
         add_ast_field(sql, ips, Column::rorm(HttpService::F.host.ip_addr).subnet());
         add_ast_field(sql, http_services, Column::rorm(HttpService::F.name).eq());
+        add_ast_field(sql, base_paths, Column::rorm(HttpService::F.base_path).eq());
         add_ast_field(sql, tls, Column::rorm(HttpService::F.tls).eq());
         add_ast_field(sql, sni, Column::rorm(HttpService::F.sni_required).eq());
         add_ast_field(

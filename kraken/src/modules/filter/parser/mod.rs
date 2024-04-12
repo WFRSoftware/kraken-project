@@ -338,6 +338,7 @@ impl HttpServiceAST {
                  domains_tags,
                  domains_created_at,
                  http_services,
+                 base_paths,
                  tls,
                  sni,
              },
@@ -382,6 +383,7 @@ impl HttpServiceAST {
                 "httpServices" | "httpService" => {
                     parse_ast_field(http_services, tokens, parse_string)
                 }
+                "basePath" | "basePaths" => parse_ast_field(base_paths, tokens, parse_string),
                 "tls" => parse_ast_field(tls, tokens, parse_boolean),
                 "sni" => parse_ast_field(sni, tokens, parse_boolean),
                 _ => Err(ParseError::UnknownColumn(column.to_string())),

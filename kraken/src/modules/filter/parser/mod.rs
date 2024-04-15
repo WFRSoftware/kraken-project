@@ -121,7 +121,7 @@ impl HostAST {
                  created_at,
                  ports,
                  ports_created_at,
-                 ports_protocols: ports_protocol,
+                 ports_protocols,
                  ports_tags,
                  services,
                  services_ports,
@@ -152,7 +152,7 @@ impl HostAST {
                     wrap_range(parse_from_str::<DateTime<Utc>>),
                 ),
                 "ports.protocols" | "ports.protocol" | "port.protocols" | "port.protocol" => {
-                    parse_ast_field(ports_protocol, tokens, parse_port_protocol)
+                    parse_ast_field(ports_protocols, tokens, parse_port_protocol)
                 }
                 "ports.tags" | "ports.tag" | "port.tags" | "port.tag" => {
                     parse_ast_field(ports_tags, tokens, parse_string)
@@ -333,6 +333,7 @@ impl HttpServiceAST {
                  ips_os,
                  ports,
                  ports_tags,
+                 ports_protocols,
                  ports_created_at,
                  domains,
                  domains_tags,
@@ -368,6 +369,9 @@ impl HttpServiceAST {
                     tokens,
                     wrap_range(parse_from_str::<DateTime<Utc>>),
                 ),
+                "ports.protocols" | "ports.protocol" | "port.protocols" | "port.protocol" => {
+                    parse_ast_field(ports_protocols, tokens, parse_port_protocol)
+                }
                 "port.tag" | "port.tags" | "ports.tag" | "ports.tags" => {
                     parse_ast_field(ports_tags, tokens, parse_string)
                 }

@@ -446,7 +446,11 @@ impl HttpServiceAST {
         if self.tags.is_some() || global.tags.is_some() {
             sql.append_join(JoinTags::http_service());
         }
-        if self.ports.is_some() || self.ports_created_at.is_some() || self.ports_tags.is_some() {
+        if self.ports.is_some()
+            || self.ports_created_at.is_some()
+            || self.ports_tags.is_some()
+            || self.ports_protocols.is_some()
+        {
             sql.append_join(from_http_service_join_port());
         }
         if self.ports_tags.is_some() {
@@ -478,6 +482,7 @@ impl HttpServiceAST {
             ports,
             ports_tags,
             ports_created_at,
+            ports_protocols,
             domains,
             domains_tags,
             domains_created_at,
@@ -509,6 +514,7 @@ impl HttpServiceAST {
             ports_created_at,
             Column::rorm(Port::F.created_at).nullable_range(),
         );
+        add_ast_field(sql, ports_protocols, Column::rorm(Port::F.protocol).eq());
         add_ast_field(sql, ports_tags, Column::new("port_tags", "tags").contains());
         add_ast_field(
             sql,

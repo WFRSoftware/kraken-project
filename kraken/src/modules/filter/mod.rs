@@ -235,6 +235,9 @@ pub struct HttpServiceAST {
     /// Filter http services by their ports' creation time
     pub ports_created_at: Option<Or<Range<DateTime<Utc>>>>,
 
+    /// Filter hosts by their ports' protocols
+    pub ports_protocols: Option<Or<PortProtocol>>,
+
     /// Filter http services by their domains' tags
     pub domains: Option<Or<String>>,
 

@@ -401,6 +401,12 @@ export const ASTFields = {
             parse: wrapRange(parseDate),
             advanced: true,
         },
+        portsProtocols: {
+            label: "Port protocols",
+            columns: ["ports.protocols", "ports.protocol", "port.protocols", "port.protocol"],
+            parse: parsePortProtocol,
+            advanced: true,
+        },
         domains: {
             label: "Domains",
             columns: ["domains", "domain"],
@@ -562,6 +568,7 @@ export const ASTFieldTypes = {
         ipsOs: "ostype",
         ports: "port",
         portsTags: "tags",
+        portsProtocols: "protocol",
         portsCreatedAt: "mayberange.date",
         domains: "domain",
         domainsTags: "tags",
